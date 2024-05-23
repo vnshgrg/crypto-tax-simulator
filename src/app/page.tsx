@@ -1,113 +1,208 @@
-import Image from "next/image";
+"use client";
+
+import { Footer } from "@/components/footer";
+import { Header } from "@/components/header";
+import { Input } from "@/components/input";
+import { Question } from "@/components/question";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger
+} from "@/components/ui/accordion";
+import { Card, CardContent } from "@/components/ui/card";
+import { YesNo } from "@/components/yes-no";
 
 export default function Home() {
+  const calculatedResult: Record<string, number> = {
+    給与所得控除: 1880000,
+    基礎控除: 480000,
+    "配偶者控除/配偶者特別控除": 380000,
+    扶養控除: 630000
+  };
+
+  const calculatedTaxResult: Record<string, number> = {
+    税金の概算は: 100000,
+    給与に対する税金は: 50000,
+    仮想通貨の税金は: 50000,
+    ふるさと納税の上限は: 50386
+  };
+
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Get started by editing&nbsp;
-          <code className="font-mono font-bold">src/app/page.tsx</code>
-        </p>
-        <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:size-auto lg:bg-none">
-          <a
-            className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{" "}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className="dark:invert"
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
-      </div>
-
-      <div className="before:bg-gradient-radial after:bg-gradient-conic relative z-[-1] flex place-items-center before:absolute before:h-[300px] before:w-full before:-translate-x-1/2 before:rounded-full before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-full after:translate-x-1/3 after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700 before:dark:opacity-10 after:dark:from-sky-900 after:dark:via-[#0141ff] after:dark:opacity-40 sm:before:w-[480px] sm:after:w-[240px] before:lg:h-[360px]">
-        <Image
-          className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
+      <Card className="w-full max-w-2xl">
+        <Header />
+        <CardContent className="border-y border-slate-200 bg-slate-50/40 pt-6">
+          <Accordion type="multiple" className="w-full">
+            <AccordionItem value="item-1">
+              <AccordionTrigger className={styles.accordionTrigger}>
+                <h3>1. 所得金額を入力してください</h3>
+              </AccordionTrigger>
+              <AccordionContent className={styles.accordionSection}>
+                <SectionOne />
+              </AccordionContent>
+            </AccordionItem>
+            <AccordionItem value="item-2">
+              <AccordionTrigger className={styles.accordionTrigger}>
+                <h3>2. 家族について教えてください</h3>
+              </AccordionTrigger>
+              <AccordionContent className={styles.accordionSection}>
+                <SectionTwo />
+              </AccordionContent>
+            </AccordionItem>
+            <AccordionItem value="item-3" className="border-none">
+              <AccordionTrigger className={styles.accordionTrigger}>
+                <h3>3. 所得控除を入力してください</h3>
+              </AccordionTrigger>
+              <AccordionContent className={styles.accordionSection}>
+                <SectionThree />
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
+        </CardContent>
+        <Footer
+          calculatedResult={calculatedResult}
+          calculatedTaxResult={calculatedTaxResult}
         />
-      </div>
-
-      <div className="mb-32 grid text-center lg:mb-0 lg:w-full lg:max-w-5xl lg:grid-cols-4 lg:text-left">
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Docs{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-sm opacity-50">
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Learn{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-sm opacity-50">
-            Learn about Next.js in an interactive course with&nbsp;quizzes!
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Templates{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-sm opacity-50">
-            Explore starter templates for Next.js.
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Deploy{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-balance text-sm opacity-50">
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
+      </Card>
     </main>
   );
 }
+
+const styles: Record<string, string> = {
+  accordionTrigger:
+    "font-semibold text-gray-500 hover:no-underline hover:text-gray-700 data-[state=open]:text-gray-800",
+  accordionSection: "pl-4"
+};
+
+const SectionOne = () => {
+  return (
+    <div className="space-y-4">
+      <Question title="給与収入" help="あなたの職業を選択してください。">
+        <Input type="number" placeholder="給与収入" />
+      </Question>
+      <Question title="仮想通貨の利益" help="あなたの職業を選択してください。">
+        <Input type="number" placeholder="仮想通貨の利益" />
+      </Question>
+    </div>
+  );
+};
+
+const SectionTwo = () => {
+  return (
+    <div className="space-y-4">
+      <Question title="配偶者の有無" help="あなたの職業を選択してください。">
+        <YesNo name="001" value={false} onChange={() => {}} />
+      </Question>
+      <Question
+        title="配偶者の給与収入"
+        help="あなたの職業を選択してください。"
+      >
+        <Input type="number" placeholder="配偶者の給与収入" />
+      </Question>
+      <Question
+        title="寡婦に該当しますか？"
+        help="あなたの職業を選択してください。"
+      >
+        <YesNo name="002" value={false} onChange={() => {}} />
+      </Question>
+      <Question title="一般の障害者" help="あなたの職業を選択してください。">
+        <Input type="number" suffix="人" placeholder="一般の障害者" />
+      </Question>
+      <Question
+        title="本人・別居の特別障害者"
+        help="あなたの職業を選択してください。"
+      >
+        <Input type="number" suffix="人" placeholder="本人・別居の特別障害者" />
+      </Question>
+      <Question
+        title="同居の特別障害者"
+        help="あなたの職業を選択してください。"
+      >
+        <Input type="number" suffix="人" placeholder="同居の特別障害者" />
+      </Question>
+      <Question
+        title="扶養家族の人数: 15歳以下"
+        help="あなたの職業を選択してください。"
+      >
+        <Input type="number" suffix="人" placeholder="0" />
+      </Question>
+      <Question
+        title="扶養家族の人数: 16-18歳"
+        help="あなたの職業を選択してください。"
+      >
+        <Input type="number" suffix="人" placeholder="0" />
+      </Question>
+      <Question
+        title="扶養家族の人数: 19-22歳"
+        help="あなたの職業を選択してください。"
+      >
+        <Input type="number" suffix="人" placeholder="0" />
+      </Question>
+      <Question
+        title="扶養家族の人数: 23-69歳"
+        help="あなたの職業を選択してください。"
+      >
+        <Input type="number" suffix="人" placeholder="0" />
+      </Question>
+      <Question
+        title="扶養家族の人数: 70歳+(同居の親等)"
+        help="あなたの職業を選択してください。"
+      >
+        <Input type="number" suffix="人" placeholder="0" />
+      </Question>
+      <Question
+        title="扶養家族の人数: 70歳+(上記以外)"
+        help="あなたの職業を選択してください。"
+      >
+        <Input type="number" suffix="人" placeholder="0" />
+      </Question>
+    </div>
+  );
+};
+
+const SectionThree = () => {
+  return (
+    <div className="space-y-4">
+      <Question
+        title="社会保険料の金額"
+        help="あなたの職業を選択してください。"
+      >
+        <Input type="number" placeholder="0" />
+      </Question>
+      <Question
+        title="生命保険料の金額"
+        help="あなたの職業を選択してください。"
+      >
+        <Input type="number" placeholder="0" />
+      </Question>
+      <Question title="医療費の金額" help="あなたの職業を選択してください。">
+        <Input type="number" placeholder="0" />
+      </Question>
+      <Question
+        title="小規模企業共済等掛金の金額"
+        help="あなたの職業を選択してください。"
+      >
+        <Input type="number" placeholder="0" />
+      </Question>
+      <Question
+        title="地震保険料の金額"
+        help="あなたの職業を選択してください。"
+      >
+        <Input type="number" placeholder="0" />
+      </Question>
+      <Question
+        title="住宅借入金等特別控除"
+        help="あなたの職業を選択してください。"
+      >
+        <Input type="number" placeholder="0" />
+      </Question>
+      <Question
+        title="寄付金控除(ふるさと納税額)"
+        help="あなたの職業を選択してください。"
+      >
+        <Input type="number" placeholder="0" />
+      </Question>
+    </div>
+  );
+};
