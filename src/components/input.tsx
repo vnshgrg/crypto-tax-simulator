@@ -7,7 +7,7 @@ export const Input = ({
 }: React.InputHTMLAttributes<HTMLInputElement> & {
   suffix?: React.ReactNode | string;
 }) => (
-  <div className="relative">
+  <div className="relative w-48">
     <input
       className={cn(
         "w-48 rounded-md border px-4 py-2.5 font-mono text-base",

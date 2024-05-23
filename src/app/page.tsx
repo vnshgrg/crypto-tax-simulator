@@ -29,7 +29,7 @@ export default function Home() {
   };
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
+    <main className="flex min-h-screen flex-col items-center justify-between p-4 md:p-24">
       <Card className="w-full max-w-2xl">
         <Header />
         <CardContent className="border-y border-slate-200 bg-slate-50/40 pt-6">
@@ -72,12 +72,13 @@ export default function Home() {
 const styles: Record<string, string> = {
   accordionTrigger:
     "font-semibold text-gray-500 hover:no-underline hover:text-gray-700 data-[state=open]:text-gray-800",
-  accordionSection: "pl-4"
+  accordionSection: "md:pl-4",
+  sectionContainer: "space-y-5 md:space-y-4"
 };
 
 const SectionOne = () => {
   return (
-    <div className="space-y-4">
+    <div className={styles.sectionContainer}>
       <Question title="給与収入" help="あなたの職業を選択してください。">
         <Input type="number" suffix="円" placeholder="給与収入" />
       </Question>
@@ -90,7 +91,7 @@ const SectionOne = () => {
 
 const SectionTwo = () => {
   return (
-    <div className="space-y-4">
+    <div className={styles.sectionContainer}>
       <Question title="配偶者の有無" help="あなたの職業を選択してください。">
         <YesNo name="001" value={false} onChange={() => {}} />
       </Question>
@@ -169,7 +170,7 @@ const SectionTwo = () => {
 
 const SectionThree = () => {
   return (
-    <div className="space-y-4">
+    <div className={styles.sectionContainer}>
       <Question
         title="社会保険料の金額"
         help="あなたの職業を選択してください。"

@@ -11,14 +11,14 @@ export const Question = ({
   help?: React.ReactNode | string;
   children: React.ReactNode | string;
 }) => (
-  <div className="flex shrink-0 items-center justify-between">
-    <div className="flex items-center">
+  <div className="flex flex-col justify-between space-y-2 md:flex-row md:items-center md:space-y-0">
+    <div className="flex items-center justify-between md:justify-start">
       <div>
-        <h4 className="text-base font-semibold text-slate-700">{title}</h4>
+        <h4 className="font-semibold text-slate-700 md:text-base">{title}</h4>
         {description && <p className="text-sm text-slate-500">{description}</p>}
       </div>
       {help && <Help>{help}</Help>}
     </div>
-    {children}
+    <div>{children}</div>
   </div>
 );

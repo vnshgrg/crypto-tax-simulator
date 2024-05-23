@@ -10,12 +10,12 @@ export const Footer = ({
   calculatedResult,
   calculatedTaxResult
 }: FooterProps) => (
-  <CardFooter className="items-end space-x-6 pt-6 md:space-x-10">
-    <div className="relative w-40 shrink-0">
+  <CardFooter className="flex flex-col space-y-6 pt-6 md:flex-row md:items-end md:space-x-10 md:space-y-0">
+    <div className="w-40 shrink-0 md:relative">
       <img
         src="/tax-accountant-2.svg"
         alt="Crypto Tax Accountant"
-        className="absolute bottom-2 right-0 w-40"
+        className="bottom-2 right-0 w-40 md:absolute"
       />
     </div>
     <div className="w-full space-y-4 divide-y-2">

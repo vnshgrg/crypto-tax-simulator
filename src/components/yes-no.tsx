@@ -20,7 +20,7 @@ export const YesNo = ({
   };
 
   return (
-    <div className="flex h-9 items-center space-x-5">
+    <div className="flex items-center space-x-5 md:h-9">
       <div className="flex items-center space-x-2">
         <input
           type="radio"
