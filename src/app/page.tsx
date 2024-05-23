@@ -33,7 +33,7 @@ export default function Home() {
       <Card className="w-full max-w-2xl">
         <Header />
         <CardContent className="border-y border-slate-200 bg-slate-50/40 pt-6">
-          <Accordion type="single" collapsible className="w-full">
+          <Accordion type="multiple" className="w-full">
             <AccordionItem value="item-1">
               <AccordionTrigger className={styles.accordionTrigger}>
                 <h3>1. 所得金額を入力してください</h3>
