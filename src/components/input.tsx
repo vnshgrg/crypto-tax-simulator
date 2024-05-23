@@ -7,10 +7,10 @@ export const Input = ({
 }: React.InputHTMLAttributes<HTMLInputElement> & {
   suffix?: React.ReactNode | string;
 }) => (
-  <div className="relative w-48">
+  <div className="relative w-full md:w-48">
     <input
       className={cn(
-        "w-48 rounded-md border px-4 py-2.5 font-mono text-base",
+        "w-full rounded-md border px-4 py-2.5 font-mono text-base md:w-48",
         suffix ? "pr-8" : "pr-4",
         className
       )}
