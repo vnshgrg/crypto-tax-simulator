@@ -106,6 +106,12 @@ const SectionTwo = () => {
       >
         <YesNo name="002" value={false} onChange={() => {}} />
       </Question>
+      <Question
+        title="ひとり親に該当しますか？"
+        help="あなたの職業を選択してください。"
+      >
+        <YesNo name="003" value={false} onChange={() => {}} />
+      </Question>
       <Question title="一般の障害者" help="あなたの職業を選択してください。">
         <Input type="number" suffix="人" placeholder="一般の障害者" />
       </Question>
