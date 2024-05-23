@@ -2,8 +2,8 @@ import { CardFooter } from "@/components/ui/card";
 import { numberToJpy } from "@/lib/utils";
 
 type FooterProps = {
-  calculatedResult: Record<string, number>;
-  calculatedTaxResult: Record<string, number>;
+  calculatedResult: Record<string, number | null | undefined>;
+  calculatedTaxResult: Record<string, number | null | undefined>;
 };
 
 export const Footer = ({
@@ -24,7 +24,11 @@ export const Footer = ({
           <div key={key} className="flex items-center justify-between py-2">
             <span>{key}</span>
             <span className="mx-2 inline-block font-semibold text-orange-500">
-              {numberToJpy(value)}
+              {value ? (
+                numberToJpy(value)
+              ) : (
+                <span className="blur">0000000</span>
+              )}
             </span>
           </div>
         ))}
@@ -34,7 +38,11 @@ export const Footer = ({
           <div key={key} className="flex items-center justify-between py-2">
             <span>{key}</span>
             <span className="mx-2 inline-block font-semibold text-orange-500">
-              {numberToJpy(value)}
+              {value ? (
+                numberToJpy(value)
+              ) : (
+                <span className="blur">000000</span>
+              )}
             </span>
           </div>
         ))}

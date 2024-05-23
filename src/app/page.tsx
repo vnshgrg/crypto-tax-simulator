@@ -14,11 +14,11 @@ import { Card, CardContent } from "@/components/ui/card";
 import { YesNo } from "@/components/yes-no";
 
 export default function Home() {
-  const calculatedResult: Record<string, number> = {
+  const calculatedResult: Record<string, number | null | undefined> = {
     給与所得控除: 1880000,
-    基礎控除: 480000,
-    "配偶者控除/配偶者特別控除": 380000,
-    扶養控除: 630000
+    基礎控除: null,
+    "配偶者控除/配偶者特別控除": null,
+    扶養控除: null
   };
 
   const calculatedTaxResult: Record<string, number> = {
