@@ -12,104 +12,95 @@ type SpouseSpecialDeduction = {
   spouseDeduction: Array<{ spouseIncomeSlab: IncomeSlab; deduction: number }>;
 };
 
-const eligibleThreshold: Record<
+const ELIGIBLE_INCOME_THRESHOLD: Record<
   "taxpayerTotalIncome" | "spouseIncome",
   IncomeSlab
 > = {
   taxpayerTotalIncome: {
     min: 0,
-    max: 1_000_0000
+    max: 10_000_000
   },
   spouseIncome: {
-    min: 103_0000,
-    max: 201_0000
+    min: 1_030_000,
+    max: 2_010_000
   }
 };
 
-const spouseIncomeSlab: SpouseIncomeSlabData<IncomeSlab> = [
+const SPOUSE_INCOME_SLAB: SpouseIncomeSlabData<IncomeSlab> = [
   {
-    min: 103_0000,
-    max: 105_0000
+    min: 1_030_000,
+    max: 1_050_000
   },
   {
-    min: 105_0000,
-    max: 110_0000
+    min: 1_050_000,
+    max: 1_100_000
   },
   {
-    min: 110_0000,
-    max: 115_0000
+    min: 1_100_000,
+    max: 1_150_000
   },
   {
-    min: 115_0000,
-    max: 120_0000
+    min: 1_150_000,
+    max: 1_200_000
   },
   {
-    min: 120_0000,
-    max: 125_0000
+    min: 1_200_000,
+    max: 1_250_000
   },
   {
-    min: 125_0000,
-    max: 130_0000
+    min: 1_250_000,
+    max: 1_300_000
   },
   {
-    min: 130_0000,
-    max: 135_0000
+    min: 1_300_000,
+    max: 1_350_000
   },
   {
-    min: 135_0000,
-    max: 140_0000
+    min: 1_350_000,
+    max: 1_400_000
   },
   {
-    min: 140_0000,
-    max: 150_0000
+    min: 1_400_000,
+    max: 1_500_000
   },
   {
-    min: 150_0000,
-    max: 201_0000
+    min: 1_500_000,
+    max: 2_010_000
   }
 ];
 
 // prettier-ignore
-const firstSlabDeduction: SpouseIncomeSlabData<number> = [380_000, 360_000, 310_000, 260_000, 210_000, 160_000, 110_000, 60_000, 30_000, 0];
+const FIRST_SLAB_DEDUCTION = [380_000, 360_000, 310_000, 260_000, 210_000, 160_000, 110_000, 60_000, 30_000, 0].map((deduction, index) => ({spouseIncomeSlab: SPOUSE_INCOME_SLAB[index], deduction}));
 // prettier-ignore
-const secondSlabDeduction: SpouseIncomeSlabData<number> = [260_000, 240_000, 210_000, 180_000, 140_000, 110_000, 80_000, 40_000, 20_000, 0];
+const SECOND_SLAB_DEDUCTION = [260_000, 240_000, 210_000, 180_000, 140_000, 110_000, 80_000, 40_000, 20_000, 0].map((deduction, index) => ({spouseIncomeSlab: SPOUSE_INCOME_SLAB[index], deduction}));
 // prettier-ignore
-const thirdSlabDeduction: SpouseIncomeSlabData<number> = [130_000, 120_000, 100_000, 80_000, 60_000, 40_000, 20_000, 10_000, 0, 0];
+const THIRD_SLAB_DEDUCTION = [130_000, 120_000, 100_000, 80_000, 60_000, 40_000, 20_000, 10_000, 0, 0].map((deduction, index) => ({spouseIncomeSlab: SPOUSE_INCOME_SLAB[index], deduction}));
 
-const spouseSpecialDeduction: SpouseSpecialDeduction[] = [
+const SPOUSE_SPECIAL_DEDUCTION: SpouseSpecialDeduction[] = [
   {
     taxpayerTotalIncomeSlab: {
       min: 0,
-      max: 900_0000
+      max: 9_000_000
     },
-    spouseDeduction: spouseIncomeSlab.map((slab, index) => ({
-      spouseIncomeSlab: slab,
-      deduction: firstSlabDeduction[index]
-    }))
+    spouseDeduction: FIRST_SLAB_DEDUCTION
   },
   {
     taxpayerTotalIncomeSlab: {
-      min: 900_0000,
-      max: 950_0000
+      min: 9_000_000,
+      max: 9_500_000
     },
-    spouseDeduction: spouseIncomeSlab.map((slab, index) => ({
-      spouseIncomeSlab: slab,
-      deduction: secondSlabDeduction[index]
-    }))
+    spouseDeduction: SECOND_SLAB_DEDUCTION
   },
   {
     taxpayerTotalIncomeSlab: {
-      min: 950_0000,
-      max: 1_000_0000
+      min: 9_500_000,
+      max: 10_000_000
     },
-    spouseDeduction: spouseIncomeSlab.map((slab, index) => ({
-      spouseIncomeSlab: slab,
-      deduction: thirdSlabDeduction[index]
-    }))
+    spouseDeduction: THIRD_SLAB_DEDUCTION
   }
 ];
 
-function isBetweenSlab(value: number, slab: IncomeSlab): boolean {
+export function isBetweenSlab(value: number, slab: IncomeSlab): boolean {
   return value > slab.min && value <= slab.max;
 }
 
@@ -119,10 +110,11 @@ export function calculateSpouseSpecialDeduction(
 ): number {
   // Both conditions should be true
   // prettier-ignore
-  if (!isBetweenSlab(taxpayerTotalIncome, eligibleThreshold.taxpayerTotalIncome)) return 0;
-  if (!isBetweenSlab(spouseIncome, eligibleThreshold.spouseIncome)) return 0;
+  if (!isBetweenSlab(taxpayerTotalIncome, ELIGIBLE_INCOME_THRESHOLD.taxpayerTotalIncome)) return 0;
+  // prettier-ignore
+  if (!isBetweenSlab(spouseIncome, ELIGIBLE_INCOME_THRESHOLD.spouseIncome)) return 0;
 
-  const spouseIncomeSlab = spouseSpecialDeduction.find(
+  const spouseIncomeSlab = SPOUSE_SPECIAL_DEDUCTION.find(
     ({ taxpayerTotalIncomeSlab }) =>
       isBetweenSlab(taxpayerTotalIncome, taxpayerTotalIncomeSlab)
   );
