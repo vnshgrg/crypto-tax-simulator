@@ -101,7 +101,7 @@ const SPOUSE_SPECIAL_DEDUCTION: SpouseSpecialDeduction[] = [
 ];
 
 export function isBetweenSlab(value: number, slab: IncomeSlab): boolean {
-  return value > slab.min && value <= slab.max;
+  return value >= slab.min && value < slab.max;
 }
 
 export function calculateSpouseSpecialDeduction(
