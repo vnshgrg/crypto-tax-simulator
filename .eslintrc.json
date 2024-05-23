@@ -17,6 +17,7 @@
     "no-console": "warn",
     "no-debugger": "warn",
     "tailwindcss/no-custom-classname": "off",
+    "@next/next/no-img-element": "off",
     "import/order": [
       "error",
       {
