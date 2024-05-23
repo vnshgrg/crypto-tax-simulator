@@ -1,8 +1,7 @@
 "use client";
 
-import { PopoverArrow } from "@radix-ui/react-popover";
-import { useState } from "react";
-
+import { Input } from "@/components/input";
+import { Question } from "@/components/question";
 import {
   Accordion,
   AccordionContent,
@@ -17,13 +16,8 @@ import {
   CardHeader,
   CardTitle
 } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger
-} from "@/components/ui/popover";
-import { cn, numberToJpy } from "@/lib/utils";
+import { YesNo } from "@/components/yes-no";
+import { numberToJpy } from "@/lib/utils";
 
 export default function Home() {
   const calculatedResult: Record<string, number> = {
@@ -265,130 +259,6 @@ const SectionThree = () => {
       >
         <Input type="text" placeholder="0" />
       </Question>
-    </div>
-  );
-};
-
-const Help = ({ children }: { children: React.ReactNode }) => (
-  <Popover>
-    <PopoverTrigger className="ml-1 text-slate-400">
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 24 24"
-        strokeWidth={1.5}
-        stroke="currentColor"
-        className=" size-4"
-      >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 5.25h.008v.008H12v-.008Z"
-        />
-      </svg>
-    </PopoverTrigger>
-    <PopoverContent
-      side="right"
-      className="px-3 py-2 text-sm text-slate-600 shadow-none"
-    >
-      {children}
-      <PopoverArrow className="fill-slate-200" />
-    </PopoverContent>
-  </Popover>
-);
-
-const Question = ({
-  title,
-  description,
-  help,
-  children
-}: {
-  title: React.ReactNode | string;
-  description?: React.ReactNode | string;
-  help?: React.ReactNode | string;
-  children: React.ReactNode | string;
-}) => (
-  <div className="flex shrink-0 items-center justify-between">
-    <div className="flex items-center">
-      <div>
-        <h4 className="text-base font-semibold text-slate-700">{title}</h4>
-        {description && <p className="text-sm text-slate-500">{description}</p>}
-      </div>
-      {help && <Help>{help}</Help>}
-    </div>
-    {children}
-  </div>
-);
-
-const Input = ({
-  className,
-  suffix,
-  ...props
-}: React.InputHTMLAttributes<HTMLInputElement> & {
-  suffix?: React.ReactNode | string;
-}) => (
-  <div className="relative">
-    <input
-      className={cn(
-        "w-48 rounded-md border px-4 py-2.5 font-mono text-base",
-        suffix ? "pr-8" : "pr-4",
-        className
-      )}
-      {...props}
-    />
-    {suffix && (
-      <span className="absolute right-3 top-2.5 text-base text-slate-500">
-        {suffix}
-      </span>
-    )}
-  </div>
-);
-
-const YesNo = ({
-  name,
-  value: _value,
-  onChange
-}: {
-  name: string;
-  value: boolean;
-  onChange: (value: boolean) => void;
-}) => {
-  const [value, setValue] = useState(_value);
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value === "yes";
-    setValue(value);
-    onChange(value);
-  };
-
-  return (
-    <div className="flex h-9 items-center space-x-5">
-      <div className="flex items-center space-x-2">
-        <input
-          type="radio"
-          id={`${name}-yes`}
-          name={name}
-          value="yes"
-          onChange={handleChange}
-          checked={value === true}
-        />
-        <Label htmlFor={`${name}-yes`} className="cursor-pointer">
-          はい
-        </Label>
-      </div>
-      <div className="flex items-center space-x-2">
-        <input
-          type="radio"
-          id={`${name}-no`}
-          name={name}
-          value="no"
-          onChange={handleChange}
-          checked={value === false}
-        />
-        <Label htmlFor={`${name}-no`} className="cursor-pointer">
-          いいえ
-        </Label>
-      </div>
     </div>
   );
 };
