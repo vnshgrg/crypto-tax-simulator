@@ -1,5 +1,7 @@
 "use client";
 
+import { Footer } from "@/components/footer";
+import { Header } from "@/components/header";
 import { Input } from "@/components/input";
 import { Question } from "@/components/question";
 import {
@@ -8,16 +10,8 @@ import {
   AccordionItem,
   AccordionTrigger
 } from "@/components/ui/accordion";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle
-} from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { YesNo } from "@/components/yes-no";
-import { numberToJpy } from "@/lib/utils";
 
 export default function Home() {
   const calculatedResult: Record<string, number> = {
@@ -37,23 +31,7 @@ export default function Home() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
       <Card className="w-full max-w-2xl">
-        <CardHeader className="flex flex-row space-x-6">
-          <div className="space-y-4">
-            <CardTitle className="text-xl font-bold text-slate-700">
-              仮想通貨の税金計算シミュレーションツール
-            </CardTitle>
-            <CardDescription className="text-base">
-              簡単な質問に答えるだけで、仮想通貨取引の税金を簡単に概算します。さっそく始めましょう！
-            </CardDescription>
-          </div>
-          <div className="relative w-24 shrink-0">
-            <img
-              src="/tax-accountant.svg"
-              alt="Crypto Tax Accountant"
-              className="right -0 absolute -top-2 w-28"
-            />
-          </div>
-        </CardHeader>
+        <Header />
         <CardContent className="border-y border-slate-200 bg-slate-50/40 pt-6">
           <Accordion type="single" collapsible className="w-full">
             <AccordionItem value="item-1">
@@ -82,43 +60,10 @@ export default function Home() {
             </AccordionItem>
           </Accordion>
         </CardContent>
-        <CardFooter className="items-end space-x-6 pt-6 md:space-x-10">
-          <div className="relative w-40 shrink-0">
-            <img
-              src="/tax-accountant-2.svg"
-              alt="Crypto Tax Accountant"
-              className="absolute bottom-2 right-0 w-40"
-            />
-          </div>
-          <div className="w-full space-y-4 divide-y-2">
-            <div className="space-y-2 divide-y opacity-70">
-              {Object.entries(calculatedResult).map(([key, value]) => (
-                <div
-                  key={key}
-                  className="flex items-center justify-between py-2"
-                >
-                  <span>{key}</span>
-                  <span className={styles.resultHighlight}>
-                    {numberToJpy(value)}
-                  </span>
-                </div>
-              ))}
-            </div>
-            <div className="space-y-2 divide-y pt-4">
-              {Object.entries(calculatedTaxResult).map(([key, value]) => (
-                <div
-                  key={key}
-                  className="flex items-center justify-between py-2"
-                >
-                  <span>{key}</span>
-                  <span className={styles.resultHighlight}>
-                    {numberToJpy(value)}
-                  </span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </CardFooter>
+        <Footer
+          calculatedResult={calculatedResult}
+          calculatedTaxResult={calculatedTaxResult}
+        />
       </Card>
     </main>
   );
@@ -127,8 +72,7 @@ export default function Home() {
 const styles: Record<string, string> = {
   accordionTrigger:
     "font-semibold text-gray-500 hover:no-underline hover:text-gray-700 data-[state=open]:text-gray-800",
-  accordionSection: "pl-4",
-  resultHighlight: "mx-2 inline-block font-semibold text-orange-500"
+  accordionSection: "pl-4"
 };
 
 const SectionOne = () => {
