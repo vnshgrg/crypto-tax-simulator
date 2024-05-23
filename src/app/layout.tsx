@@ -6,8 +6,9 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Crypto Tax Simulator",
-  description: "Simulate your taxes on crypto earnings..."
+  title: "仮想通貨の税金計算シミュレーションツール",
+  description:
+    "簡単な質問に答えるだけで、仮想通貨取引の税金を簡単に概算します。さっそく始めましょう！"
 };
 
 export default function RootLayout({
