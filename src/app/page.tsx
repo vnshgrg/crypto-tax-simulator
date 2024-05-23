@@ -79,10 +79,10 @@ const SectionOne = () => {
   return (
     <div className="space-y-4">
       <Question title="給与収入" help="あなたの職業を選択してください。">
-        <Input type="text" placeholder="給与収入" />
+        <Input type="number" placeholder="給与収入" />
       </Question>
       <Question title="仮想通貨の利益" help="あなたの職業を選択してください。">
-        <Input type="text" placeholder="仮想通貨の利益" />
+        <Input type="number" placeholder="仮想通貨の利益" />
       </Question>
     </div>
   );
@@ -98,7 +98,7 @@ const SectionTwo = () => {
         title="配偶者の給与収入"
         help="あなたの職業を選択してください。"
       >
-        <Input type="text" placeholder="配偶者の給与収入" />
+        <Input type="number" placeholder="配偶者の給与収入" />
       </Question>
       <Question
         title="寡婦に該当しますか？"
@@ -107,55 +107,55 @@ const SectionTwo = () => {
         <YesNo name="002" value={false} onChange={() => {}} />
       </Question>
       <Question title="一般の障害者" help="あなたの職業を選択してください。">
-        <Input suffix="人" type="text" placeholder="一般の障害者" />
+        <Input type="number" suffix="人" placeholder="一般の障害者" />
       </Question>
       <Question
         title="本人・別居の特別障害者"
         help="あなたの職業を選択してください。"
       >
-        <Input suffix="人" type="text" placeholder="本人・別居の特別障害者" />
+        <Input type="number" suffix="人" placeholder="本人・別居の特別障害者" />
       </Question>
       <Question
         title="同居の特別障害者"
         help="あなたの職業を選択してください。"
       >
-        <Input suffix="人" type="text" placeholder="同居の特別障害者" />
+        <Input type="number" suffix="人" placeholder="同居の特別障害者" />
       </Question>
       <Question
         title="扶養家族の人数: 15歳以下"
         help="あなたの職業を選択してください。"
       >
-        <Input suffix="人" type="text" placeholder="0" />
+        <Input type="number" suffix="人" placeholder="0" />
       </Question>
       <Question
         title="扶養家族の人数: 16-18歳"
         help="あなたの職業を選択してください。"
       >
-        <Input suffix="人" type="text" placeholder="0" />
+        <Input type="number" suffix="人" placeholder="0" />
       </Question>
       <Question
         title="扶養家族の人数: 19-22歳"
         help="あなたの職業を選択してください。"
       >
-        <Input suffix="人" type="text" placeholder="0" />
+        <Input type="number" suffix="人" placeholder="0" />
       </Question>
       <Question
         title="扶養家族の人数: 23-69歳"
         help="あなたの職業を選択してください。"
       >
-        <Input suffix="人" type="text" placeholder="0" />
+        <Input type="number" suffix="人" placeholder="0" />
       </Question>
       <Question
         title="扶養家族の人数: 70歳+(同居の親等)"
         help="あなたの職業を選択してください。"
       >
-        <Input suffix="人" type="text" placeholder="0" />
+        <Input type="number" suffix="人" placeholder="0" />
       </Question>
       <Question
         title="扶養家族の人数: 70歳+(上記以外)"
         help="あなたの職業を選択してください。"
       >
-        <Input suffix="人" type="text" placeholder="0" />
+        <Input type="number" suffix="人" placeholder="0" />
       </Question>
     </div>
   );
@@ -168,40 +168,40 @@ const SectionThree = () => {
         title="社会保険料の金額"
         help="あなたの職業を選択してください。"
       >
-        <Input type="text" placeholder="0" />
+        <Input type="number" placeholder="0" />
       </Question>
       <Question
         title="生命保険料の金額"
         help="あなたの職業を選択してください。"
       >
-        <Input type="text" placeholder="0" />
+        <Input type="number" placeholder="0" />
       </Question>
       <Question title="医療費の金額" help="あなたの職業を選択してください。">
-        <Input type="text" placeholder="0" />
+        <Input type="number" placeholder="0" />
       </Question>
       <Question
         title="小規模企業共済等掛金の金額"
         help="あなたの職業を選択してください。"
       >
-        <Input type="text" placeholder="0" />
+        <Input type="number" placeholder="0" />
       </Question>
       <Question
         title="地震保険料の金額"
         help="あなたの職業を選択してください。"
       >
-        <Input type="text" placeholder="0" />
+        <Input type="number" placeholder="0" />
       </Question>
       <Question
         title="住宅借入金等特別控除"
         help="あなたの職業を選択してください。"
       >
-        <Input type="text" placeholder="0" />
+        <Input type="number" placeholder="0" />
       </Question>
       <Question
         title="寄付金控除(ふるさと納税額)"
         help="あなたの職業を選択してください。"
       >
-        <Input type="text" placeholder="0" />
+        <Input type="number" placeholder="0" />
       </Question>
     </div>
   );
