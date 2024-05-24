@@ -14,9 +14,12 @@ export const TaxGraph = ({
   if (taxBrackets.length === 0) return null;
   return (
     <div className="w-full">
-      <div className="grid h-40 grid-cols-7 divide-x overflow-hidden rounded-lg border">
+      <div className="grid h-56 grid-cols-7 divide-x overflow-hidden rounded-lg border md:h-40">
         {TAX_BRACKETS.map(({ rate, upperLimit }, index) => (
-          <div key={index} className="flex h-40 flex-col text-center text-sm">
+          <div
+            key={index}
+            className="flex h-56 flex-col text-center text-sm md:h-40"
+          >
             <div className="size-full">
               <TaxGraphBracket
                 usersTaxbracket={taxBrackets[index]}
@@ -25,9 +28,11 @@ export const TaxGraph = ({
               />
             </div>
             <div className="w-full border-t py-2">
-              <div>{rate * 100}%</div>
-              <div className="text-xs text-slate-400">
-                {numberToMan(upperLimit)}
+              <div className="text-xs sm:text-sm">{rate * 100}%</div>
+              <div className="h-12 text-xs text-slate-400 md:h-5">
+                {numberToMan(upperLimit) !== "∞円"
+                  ? numberToMan(upperLimit)
+                  : `${numberToMan(40_000_000)}以上`}
               </div>
             </div>
           </div>
@@ -66,7 +71,7 @@ const TaxGraphBracket = ({
   );
   return (
     <div className="relative flex h-full flex-col justify-center pb-2">
-      <div className="z-20">
+      <div className="z-20 text-xs sm:text-sm">
         {userTaxBracketExists && numberToMan(usersTaxbracket.taxAmount)}
       </div>
       <div
