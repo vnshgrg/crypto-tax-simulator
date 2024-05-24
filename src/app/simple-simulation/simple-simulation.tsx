@@ -1,7 +1,6 @@
 "use client";
 
 import { Input } from "@/components/input";
-import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -19,11 +18,11 @@ import {
 export const SimpleSimulation = ({
   setSalaryIncome,
   setCryptoProfit,
-  onClick
+  triggerButton
 }: {
   setSalaryIncome: React.Dispatch<React.SetStateAction<number>>;
   setCryptoProfit: React.Dispatch<React.SetStateAction<number>>;
-  onClick: () => void;
+  triggerButton: React.ReactNode;
 }) => {
   return (
     <Card className="mx-auto w-full max-w-sm rounded-md bg-gray-50 shadow-md">
@@ -80,14 +79,7 @@ export const SimpleSimulation = ({
           </div>
         </div>
       </CardContent>
-      <CardFooter className="justify-center">
-        <Button
-          className="w-[200px] rounded-lg bg-blue-400 p-2 hover:bg-blue-700 active:bg-blue-700"
-          onClick={onClick}
-        >
-          計算する
-        </Button>
-      </CardFooter>
+      <CardFooter className="justify-center">{triggerButton}</CardFooter>
     </Card>
   );
 };
