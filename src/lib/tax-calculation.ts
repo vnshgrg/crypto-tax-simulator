@@ -55,47 +55,62 @@ const SPECIFIC_DEDUCTION = 630_000;
 const ELDERLY_DEDUCTION_CORESIDING = 580_000;
 const ELDERLY_DEDUCTION_NON_CORESIDING = 480_000;
 
-export interface Dependent {
-  age: number;
-  coresiding?: boolean;
-  spouseIncome?: number;
-}
 
-export function calculateDependentDeduction(dependents: Dependent[]): number {
+export type DependentCountsByGroup = {
+  under15: number;
+  from16to18: number;
+  from19to22: number;
+  from23to69: number;
+  over70Coresiding: number;
+  over70Other: number;
+};
+
+export function calculateDependentDeduction(
+  dependents: DependentCountsByGroup
+): number {
   let totalDeduction = 0;
 
-  dependents.forEach((dependent) => {
-    if (dependent.age <= 15) {
-      // 15歳以下の扶養親族
+  for (const [key, value] of Object.entries(dependents)) {
+    if (key === "under15") {
       totalDeduction += 0;
-    } else if (
-      (dependent.age >= 16 && dependent.age <= 18) ||
-      (dependent.age >= 23 &&
-        dependent.age <= 69 &&
-        (dependent.spouseIncome === undefined ||
-          dependent.spouseIncome < 1_040_000))
-    ) {
-      // 一般の扶養控除対象 (16-18歳、23-69歳)
-      totalDeduction += GENERAL_DEDUCTION;
-    } else if (dependent.age >= 19 && dependent.age <= 22) {
-      // 特定扶養控除対象 (19-22歳)
-      totalDeduction += SPECIFIC_DEDUCTION;
-    } else if (dependent.age >= 70) {
-      // 老人扶養控除対象 (70歳以上)
-      if (dependent.coresiding) {
-        totalDeduction += ELDERLY_DEDUCTION_CORESIDING;
-      } else {
-        totalDeduction += ELDERLY_DEDUCTION_NON_CORESIDING;
-      }
+    } else if (key === "from16to18" || key === "from23to69") {
+      totalDeduction += value * GENERAL_DEDUCTION;
+    } else if (key === "from19to22") {
+      totalDeduction += value * SPECIFIC_DEDUCTION;
+    } else if (key === "over70Coresiding") {
+      totalDeduction += value * ELDERLY_DEDUCTION_CORESIDING;
+    } else if (key === "over70Other") {
+      totalDeduction += value * ELDERLY_DEDUCTION_NON_CORESIDING;
     }
-  });
-
+  }
   return totalDeduction;
 }
 
-// TODO: 寄附金控除(ふるさと納税)
-export function calculateDonationDeduction(donation: number): number {
-  return donation;
+// 寄附金控除(ふるさと納税)
+export function calculateDeductionLimitForFurusatoTaxPayment(
+  taxableIncomeWithoutFurusatoDonation: number
+): number {
+  const marginalIncomeTaxRate = calculateMarginalIncomeTaxRate(
+    taxableIncomeWithoutFurusatoDonation
+  );
+
+  const deductionLimitForFurusatoTaxPayment =
+    (taxableIncomeWithoutFurusatoDonation * 0.1 * 0.2) /
+      (0.9 - marginalIncomeTaxRate * 1.021) +
+    2000;
+
+  // Fractions less than one thousand yen are rounded down
+  return Math.floor(deductionLimitForFurusatoTaxPayment / 4 / 1000) * 1000 * 4;
+}
+
+// 所得税の限界税率
+function calculateMarginalIncomeTaxRate(taxableIncome: number): number {
+  for (const bracket of TAX_BRACKETS) {
+    if (taxableIncome <= bracket.upperLimit) {
+      return bracket.rate;
+    }
+  }
+  return 0;
 }
 
 // 障害者控除
