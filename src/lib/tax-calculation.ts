@@ -44,11 +44,6 @@ export function calculateBasicDeduction(income: number): number {
   }
 }
 
-// TODO: 配偶者控除
-export function calculateSpouseDeduction(): number {
-  return 0;
-}
-
 // 扶養控除
 const GENERAL_DEDUCTION = 380_000;
 const SPECIFIC_DEDUCTION = 630_000;
@@ -104,9 +99,12 @@ export function calculateDeductionLimitForFurusatoTaxPayment(
 
 // 所得税の限界税率
 function calculateMarginalIncomeTaxRate(taxableIncome: number): number {
-  for (const bracket of TAX_BRACKETS) {
-    if (taxableIncome <= bracket.upperLimit) {
-      return bracket.rate;
+  for (let i = 1; i < TAX_BRACKETS.length; i++) {
+    if (taxableIncome < TAX_BRACKETS[i - 1].upperLimit) {
+      return TAX_BRACKETS[i - 1].rate;
+    }
+    if (taxableIncome <= TAX_BRACKETS[i].upperLimit) {
+      return TAX_BRACKETS[i].rate;
     }
   }
   return 0;
@@ -142,11 +140,6 @@ export function calculateSingleParentDeduction(
   isSingleParent: boolean
 ): number {
   return isSingleParent ? 350_000 : 0;
-}
-
-// TODO: 課税所得
-export function calculateTaxableIncome(): number {
-  return 0;
 }
 
 // 所得税の計算
