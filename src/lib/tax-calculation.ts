@@ -55,41 +55,33 @@ const SPECIFIC_DEDUCTION = 630_000;
 const ELDERLY_DEDUCTION_CORESIDING = 580_000;
 const ELDERLY_DEDUCTION_NON_CORESIDING = 480_000;
 
-interface Dependent {
-  age: number;
-  coresiding?: boolean;
-  spouseIncome?: number;
-}
+export type DependentCountsByGroup = {
+  under15: number;
+  from16to18: number;
+  from19to22: number;
+  from23to69: number;
+  over70Coresiding: number;
+  over70Other: number;
+};
 
-export function calculateDependentDeduction(dependents: Dependent[]): number {
+export function calculateDependentDeduction(
+  dependents: DependentCountsByGroup
+): number {
   let totalDeduction = 0;
 
-  dependents.forEach((dependent) => {
-    if (dependent.age <= 15) {
-      // 15歳以下の扶養親族
+  for (const [key, value] of Object.entries(dependents)) {
+    if (key === "under15") {
       totalDeduction += 0;
-    } else if (
-      (dependent.age >= 16 && dependent.age <= 18) ||
-      (dependent.age >= 23 &&
-        dependent.age <= 69 &&
-        (dependent.spouseIncome === undefined ||
-          dependent.spouseIncome < 1_040_000))
-    ) {
-      // 一般の扶養控除対象 (16-18歳、23-69歳)
-      totalDeduction += GENERAL_DEDUCTION;
-    } else if (dependent.age >= 19 && dependent.age <= 22) {
-      // 特定扶養控除対象 (19-22歳)
-      totalDeduction += SPECIFIC_DEDUCTION;
-    } else if (dependent.age >= 70) {
-      // 老人扶養控除対象 (70歳以上)
-      if (dependent.coresiding) {
-        totalDeduction += ELDERLY_DEDUCTION_CORESIDING;
-      } else {
-        totalDeduction += ELDERLY_DEDUCTION_NON_CORESIDING;
-      }
+    } else if (key === "from16to18" || key === "from23to69") {
+      totalDeduction += value * GENERAL_DEDUCTION;
+    } else if (key === "from19to22") {
+      totalDeduction += value * SPECIFIC_DEDUCTION;
+    } else if (key === "over70Coresiding") {
+      totalDeduction += value * ELDERLY_DEDUCTION_CORESIDING;
+    } else if (key === "over70Other") {
+      totalDeduction += value * ELDERLY_DEDUCTION_NON_CORESIDING;
     }
-  });
-
+  }
   return totalDeduction;
 }
 
