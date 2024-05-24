@@ -8,6 +8,7 @@ export function cn(...inputs: ClassValue[]) {
 export function numberToJpy(value: number) {
   return new Intl.NumberFormat("ja-JP", {
     style: "currency",
-    currency: "JPY"
+    currency: "JPY",
+    currencyDisplay: "name"
   }).format(value);
 }

@@ -66,7 +66,7 @@ export default function Home() {
   };
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
+    <main className="flex min-h-screen flex-col items-center justify-between p-4 md:p-24">
       <Card className="w-full max-w-2xl">
         <Header />
         <CardContent className="border-y border-slate-200 bg-slate-50/40 pt-6">
@@ -109,7 +109,8 @@ export default function Home() {
 const styles: Record<string, string> = {
   accordionTrigger:
     "font-semibold text-gray-500 hover:no-underline hover:text-gray-700 data-[state=open]:text-gray-800",
-  accordionSection: "pl-4"
+  accordionSection: "md:pl-4",
+  sectionContainer: "space-y-5 md:space-y-4"
 };
 
 type SectionProps = {
@@ -119,7 +120,7 @@ type SectionProps = {
 
 const SectionOne = ({ state, setState }: SectionProps) => {
   return (
-    <div className="space-y-4">
+    <div className={styles.sectionContainer}>
       <Question title="給与収入" help="あなたの職業を選択してください。">
         <Input
           type="number"
@@ -144,7 +145,7 @@ const SectionOne = ({ state, setState }: SectionProps) => {
 
 const SectionTwo = ({ state, setState }: SectionProps) => {
   return (
-    <div className="space-y-4">
+    <div className={styles.sectionContainer}>
       <Question title="配偶者の有無" help="あなたの職業を選択してください。">
         <YesNo
           name="001"
@@ -183,6 +184,12 @@ const SectionTwo = ({ state, setState }: SectionProps) => {
           value={state.isSingleParent}
           onChange={(value) => setState("isSingleParent", value)}
         />
+      </Question>
+      <Question
+        title="ひとり親に該当しますか？"
+        help="あなたの職業を選択してください。"
+      >
+        <YesNo name="003" value={false} onChange={() => {}} />
       </Question>
       <Question title="一般の障害者" help="あなたの職業を選択してください。">
         <Input
@@ -265,7 +272,7 @@ const SectionTwo = ({ state, setState }: SectionProps) => {
 
 const SectionThree = ({ state, setState }: SectionProps) => {
   return (
-    <div className="space-y-4">
+    <div className={styles.sectionContainer}>
       <Question
         title="社会保険料の金額"
         help="あなたの職業を選択してください。"
