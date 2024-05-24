@@ -109,7 +109,7 @@ const SectionOne = ({ state, setState }: SectionProps) => {
           type="number"
           suffix="円"
           placeholder="給与収入"
-          value={state.salaryIncome}
+          value={state.salaryIncome || undefined}
           onChange={(e) => setState("salaryIncome", Number(e.target.value))}
         />
       </Question>
@@ -118,7 +118,7 @@ const SectionOne = ({ state, setState }: SectionProps) => {
           type="number"
           suffix="円"
           placeholder="仮想通貨の利益"
-          value={state.cryptoProfit}
+          value={state.cryptoProfit || undefined}
           onChange={(e) => setState("cryptoProfit", Number(e.target.value))}
         />
       </Question>
@@ -144,7 +144,7 @@ const SectionTwo = ({ state, setState }: SectionProps) => {
           type="number"
           suffix="円"
           placeholder="配偶者の給与収入"
-          value={state.spouseIncome}
+          value={state.spouseIncome || undefined}
           onChange={(e) => setState("spouseIncome", Number(e.target.value))}
         />
       </Question>
@@ -168,18 +168,12 @@ const SectionTwo = ({ state, setState }: SectionProps) => {
           onChange={(value) => setState("isSingleParent", value)}
         />
       </Question>
-      <Question
-        title="ひとり親に該当しますか？"
-        help="あなたの職業を選択してください。"
-      >
-        <YesNo name="003" value={false} onChange={() => {}} />
-      </Question>
       <Question title="一般の障害者" help="あなたの職業を選択してください。">
         <Input
           type="number"
           suffix="人"
           placeholder="一般の障害者"
-          value={state.generalDisabilityCount}
+          value={state.generalDisabilityCount || undefined}
           onChange={(e) =>
             setState("generalDisabilityCount", Number(e.target.value))
           }
@@ -193,7 +187,7 @@ const SectionTwo = ({ state, setState }: SectionProps) => {
           type="number"
           suffix="人"
           placeholder="本人・別居の特別障害者"
-          value={state.specialDisabilityCount}
+          value={state.specialDisabilityCount || undefined}
           onChange={(e) =>
             setState("specialDisabilityCount", Number(e.target.value))
           }
@@ -207,7 +201,7 @@ const SectionTwo = ({ state, setState }: SectionProps) => {
           type="number"
           suffix="人"
           placeholder="同居の特別障害者"
-          value={state.cohabitingSpecialDisabilityCount}
+          value={state.cohabitingSpecialDisabilityCount || undefined}
           onChange={(e) =>
             setState("cohabitingSpecialDisabilityCount", Number(e.target.value))
           }
@@ -264,7 +258,7 @@ const SectionThree = ({ state, setState }: SectionProps) => {
           type="number"
           suffix="円"
           placeholder="0"
-          value={state.socialInsurance}
+          value={state.socialInsurance || undefined}
           onChange={(e) => setState("socialInsurance", Number(e.target.value))}
         />
       </Question>
@@ -276,7 +270,7 @@ const SectionThree = ({ state, setState }: SectionProps) => {
           type="number"
           suffix="円"
           placeholder="0"
-          value={state.lifeInsuranceDeduction}
+          value={state.lifeInsuranceDeduction || undefined}
           onChange={(e) =>
             setState("lifeInsuranceDeduction", Number(e.target.value))
           }
@@ -287,7 +281,7 @@ const SectionThree = ({ state, setState }: SectionProps) => {
           type="number"
           suffix="円"
           placeholder="0"
-          value={state.medicalExpensesDeduction}
+          value={state.medicalExpensesDeduction || undefined}
           onChange={(e) =>
             setState("medicalExpensesDeduction", Number(e.target.value))
           }
@@ -301,7 +295,7 @@ const SectionThree = ({ state, setState }: SectionProps) => {
           type="number"
           suffix="円"
           placeholder="0"
-          value={state.premiumPension}
+          value={state.premiumPension || undefined}
           onChange={(e) => setState("premiumPension", Number(e.target.value))}
         />
       </Question>
@@ -313,7 +307,7 @@ const SectionThree = ({ state, setState }: SectionProps) => {
           type="number"
           suffix="円"
           placeholder="0"
-          value={state.earthquakeInsuranceDeduction}
+          value={state.earthquakeInsuranceDeduction || undefined}
           onChange={(e) =>
             setState("earthquakeInsuranceDeduction", Number(e.target.value))
           }
@@ -327,7 +321,7 @@ const SectionThree = ({ state, setState }: SectionProps) => {
           type="number"
           suffix="円"
           placeholder="0"
-          value={state.housingLoanDeduction}
+          value={state.housingLoanDeduction || undefined}
           onChange={(e) =>
             setState("housingLoanDeduction", Number(e.target.value))
           }
@@ -341,7 +335,7 @@ const SectionThree = ({ state, setState }: SectionProps) => {
           type="number"
           suffix="円"
           placeholder="0"
-          value={state.donation}
+          value={state.donation || undefined}
           onChange={(e) => setState("donation", Number(e.target.value))}
         />
       </Question>
