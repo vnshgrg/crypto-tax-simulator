@@ -1,10 +1,5 @@
 "use client";
 
-import {
-  SetState,
-  TaxCalculationState,
-  useTaxCalculation
-} from "@/app/use-tax-calculation";
 import { Footer } from "@/components/footer";
 import { Header } from "@/components/header";
 import { Input } from "@/components/input";
@@ -17,7 +12,12 @@ import {
 } from "@/components/ui/accordion";
 import { Card, CardContent } from "@/components/ui/card";
 import { YesNo } from "@/components/yes-no";
-import { DependentCountsByGroup } from "@/lib/tax-calculation";
+import {
+  SetState,
+  TaxCalculationState,
+  useTaxCalculation
+} from "@/lib/hooks/use-tax-calculation";
+import { DependentCountsByGroup } from "@/lib/tax-calculation-helper";
 
 export default function Home() {
   const {
@@ -114,7 +114,7 @@ type SetDependents = {
   setDependents: (key: keyof DependentCountsByGroup, value: number) => void;
 };
 
-const SectionOne = ({ state, setState }: SectionProps) => {
+const SectionOne = ({ setState }: SectionProps) => {
   return (
     <div className={styles.sectionContainer}>
       <Question title="給与収入" help="あなたの職業を選択してください。">
@@ -123,7 +123,6 @@ const SectionOne = ({ state, setState }: SectionProps) => {
           min="0"
           suffix="円"
           placeholder="給与収入"
-          value={state.salaryIncome || undefined}
           onChange={(e) => setState("salaryIncome", Number(e.target.value))}
         />
       </Question>
@@ -133,7 +132,6 @@ const SectionOne = ({ state, setState }: SectionProps) => {
           min="0"
           suffix="円"
           placeholder="仮想通貨の利益"
-          value={state.cryptoProfit || undefined}
           onChange={(e) => setState("cryptoProfit", Number(e.target.value))}
         />
       </Question>
@@ -155,19 +153,20 @@ const SectionTwo = ({
           onChange={(value) => setState("hasSpouse", value)}
         />
       </Question>
-      <Question
-        title="配偶者の給与収入"
-        help="あなたの職業を選択してください。"
-      >
-        <Input
-          type="number"
-          min="0"
-          suffix="円"
-          placeholder="配偶者の給与収入"
-          value={state.spouseIncome || undefined}
-          onChange={(e) => setState("spouseIncome", Number(e.target.value))}
-        />
-      </Question>
+      {state.hasSpouse && (
+        <Question
+          title="配偶者の給与収入"
+          help="あなたの職業を選択してください。"
+        >
+          <Input
+            type="number"
+            min="0"
+            suffix="円"
+            placeholder="配偶者の給与収入"
+            onChange={(e) => setState("spouseIncome", Number(e.target.value))}
+          />
+        </Question>
+      )}
       <Question
         title="寡婦に該当しますか？"
         help="あなたの職業を選択してください。"
@@ -194,7 +193,6 @@ const SectionTwo = ({
           min="0"
           suffix="人"
           placeholder="一般の障害者"
-          value={state.generalDisabilityCount || undefined}
           onChange={(e) =>
             setState("generalDisabilityCount", Number(e.target.value))
           }
@@ -209,7 +207,6 @@ const SectionTwo = ({
           min="0"
           suffix="人"
           placeholder="本人・別居の特別障害者"
-          value={state.specialDisabilityCount || undefined}
           onChange={(e) =>
             setState("specialDisabilityCount", Number(e.target.value))
           }
@@ -224,7 +221,6 @@ const SectionTwo = ({
           min="0"
           suffix="人"
           placeholder="同居の特別障害者"
-          value={state.cohabitingSpecialDisabilityCount || undefined}
           onChange={(e) =>
             setState("cohabitingSpecialDisabilityCount", Number(e.target.value))
           }
@@ -239,7 +235,6 @@ const SectionTwo = ({
           min="0"
           suffix="人"
           placeholder="0"
-          value={state.dependents.under15 || undefined}
           onChange={(e) => setDependents("under15", Number(e.target.value))}
         />
       </Question>
@@ -252,7 +247,6 @@ const SectionTwo = ({
           min="0"
           suffix="人"
           placeholder="0"
-          value={state.dependents.from16to18 || undefined}
           onChange={(e) => setDependents("from16to18", Number(e.target.value))}
         />
       </Question>
@@ -265,7 +259,6 @@ const SectionTwo = ({
           min="0"
           suffix="人"
           placeholder="0"
-          value={state.dependents.from19to22 || undefined}
           onChange={(e) => setDependents("from19to22", Number(e.target.value))}
         />
       </Question>
@@ -278,7 +271,6 @@ const SectionTwo = ({
           min="0"
           suffix="人"
           placeholder="0"
-          value={state.dependents.from23to69 || undefined}
           onChange={(e) => setDependents("from23to69", Number(e.target.value))}
         />
       </Question>
@@ -291,7 +283,6 @@ const SectionTwo = ({
           min="0"
           suffix="人"
           placeholder="0"
-          value={state.dependents.over70Coresiding || undefined}
           onChange={(e) =>
             setDependents("over70Coresiding", Number(e.target.value))
           }
@@ -306,7 +297,6 @@ const SectionTwo = ({
           min="0"
           suffix="人"
           placeholder="0"
-          value={state.dependents.over70Other || undefined}
           onChange={(e) => setDependents("over70Other", Number(e.target.value))}
         />
       </Question>
@@ -314,7 +304,7 @@ const SectionTwo = ({
   );
 };
 
-const SectionThree = ({ state, setState }: SectionProps) => {
+const SectionThree = ({ setState }: SectionProps) => {
   return (
     <div className={styles.sectionContainer}>
       <Question
@@ -326,7 +316,6 @@ const SectionThree = ({ state, setState }: SectionProps) => {
           min="0"
           suffix="円"
           placeholder="0"
-          value={state.socialInsurance || undefined}
           onChange={(e) => setState("socialInsurance", Number(e.target.value))}
         />
       </Question>
@@ -339,7 +328,6 @@ const SectionThree = ({ state, setState }: SectionProps) => {
           min="0"
           suffix="円"
           placeholder="0"
-          value={state.lifeInsuranceDeduction || undefined}
           onChange={(e) =>
             setState("lifeInsuranceDeduction", Number(e.target.value))
           }
@@ -351,7 +339,6 @@ const SectionThree = ({ state, setState }: SectionProps) => {
           min="0"
           suffix="円"
           placeholder="0"
-          value={state.medicalExpensesDeduction || undefined}
           onChange={(e) =>
             setState("medicalExpensesDeduction", Number(e.target.value))
           }
@@ -366,7 +353,6 @@ const SectionThree = ({ state, setState }: SectionProps) => {
           min="0"
           suffix="円"
           placeholder="0"
-          value={state.premiumPension || undefined}
           onChange={(e) => setState("premiumPension", Number(e.target.value))}
         />
       </Question>
@@ -379,7 +365,6 @@ const SectionThree = ({ state, setState }: SectionProps) => {
           min="0"
           suffix="円"
           placeholder="0"
-          value={state.earthquakeInsuranceDeduction || undefined}
           onChange={(e) =>
             setState("earthquakeInsuranceDeduction", Number(e.target.value))
           }
@@ -394,7 +379,6 @@ const SectionThree = ({ state, setState }: SectionProps) => {
           min="0"
           suffix="円"
           placeholder="0"
-          value={state.housingLoanDeduction || undefined}
           onChange={(e) =>
             setState("housingLoanDeduction", Number(e.target.value))
           }
@@ -409,7 +393,6 @@ const SectionThree = ({ state, setState }: SectionProps) => {
           min="0"
           suffix="円"
           placeholder="0"
-          value={state.donation || undefined}
           onChange={(e) => setState("donation", Number(e.target.value))}
         />
       </Question>
