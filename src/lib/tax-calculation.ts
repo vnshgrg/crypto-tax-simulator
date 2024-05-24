@@ -55,6 +55,7 @@ const SPECIFIC_DEDUCTION = 630_000;
 const ELDERLY_DEDUCTION_CORESIDING = 580_000;
 const ELDERLY_DEDUCTION_NON_CORESIDING = 480_000;
 
+
 export type DependentCountsByGroup = {
   under15: number;
   from16to18: number;
@@ -160,7 +161,7 @@ const TAX_BRACKETS = [
   { upperLimit: Infinity, rate: 0.45 }
 ];
 
-type TaxedBracket = {
+export type TaxedBracket = {
   upperLimit: number;
   rate: number;
   taxedAmount: number;

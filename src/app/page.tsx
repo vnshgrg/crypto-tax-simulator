@@ -1,5 +1,10 @@
 "use client";
 
+import {
+  SetState,
+  TaxCalculationState,
+  useTaxCalculation
+} from "@/app/use-tax-calculation";
 import { Footer } from "@/components/footer";
 import { Header } from "@/components/header";
 import { Input } from "@/components/input";
@@ -14,18 +19,33 @@ import { Card, CardContent } from "@/components/ui/card";
 import { YesNo } from "@/components/yes-no";
 
 export default function Home() {
-  const calculatedResult: Record<string, number | null | undefined> = {
-    給与所得控除: 1880000,
-    基礎控除: null,
-    "配偶者控除/配偶者特別控除": null,
-    扶養控除: null
+  const {
+    state,
+    updateState,
+    result: {
+      salaryDeduction,
+      basicDeduction,
+      spouseSpecialDeduction,
+      dependentDeduction,
+      donationDeduction,
+      taxDetails,
+      taxDetailsWithoutCryptoProfit
+    }
+  } = useTaxCalculation();
+
+  const calculatedResult: Record<string, number> = {
+    給与所得控除: salaryDeduction,
+    基礎控除: basicDeduction,
+    "配偶者控除/配偶者特別控除": spouseSpecialDeduction,
+    扶養控除: dependentDeduction
   };
 
   const calculatedTaxResult: Record<string, number> = {
-    税金の概算は: 100000,
-    給与に対する税金は: 50000,
-    仮想通貨の税金は: 50000,
-    ふるさと納税の上限は: 50386
+    税金の概算は: taxDetails.taxAmount,
+    給与に対する税金は: taxDetailsWithoutCryptoProfit.taxAmount,
+    仮想通貨の税金は:
+      taxDetails.taxAmount - taxDetailsWithoutCryptoProfit.taxAmount,
+    ふるさと納税の上限は: donationDeduction
   };
 
   return (
@@ -39,7 +59,7 @@ export default function Home() {
                 <h3>1. 所得金額を入力してください</h3>
               </AccordionTrigger>
               <AccordionContent className={styles.accordionSection}>
-                <SectionOne />
+                <SectionOne state={state} setState={updateState} />
               </AccordionContent>
             </AccordionItem>
             <AccordionItem value="item-2">
@@ -47,7 +67,7 @@ export default function Home() {
                 <h3>2. 家族について教えてください</h3>
               </AccordionTrigger>
               <AccordionContent className={styles.accordionSection}>
-                <SectionTwo />
+                <SectionTwo state={state} setState={updateState} />
               </AccordionContent>
             </AccordionItem>
             <AccordionItem value="item-3" className="border-none">
@@ -55,7 +75,7 @@ export default function Home() {
                 <h3>3. 所得控除を入力してください</h3>
               </AccordionTrigger>
               <AccordionContent className={styles.accordionSection}>
-                <SectionThree />
+                <SectionThree state={state} setState={updateState} />
               </AccordionContent>
             </AccordionItem>
           </Accordion>
@@ -76,36 +96,77 @@ const styles: Record<string, string> = {
   sectionContainer: "space-y-5 md:space-y-4"
 };
 
-const SectionOne = () => {
+type SectionProps = {
+  state: TaxCalculationState;
+  setState: SetState;
+};
+
+const SectionOne = ({ state, setState }: SectionProps) => {
   return (
     <div className={styles.sectionContainer}>
       <Question title="給与収入" help="あなたの職業を選択してください。">
-        <Input type="number" suffix="円" placeholder="給与収入" />
+        <Input
+          type="number"
+          suffix="円"
+          placeholder="給与収入"
+          value={state.salaryIncome}
+          onChange={(e) => setState("salaryIncome", Number(e.target.value))}
+        />
       </Question>
       <Question title="仮想通貨の利益" help="あなたの職業を選択してください。">
-        <Input type="number" suffix="円" placeholder="仮想通貨の利益" />
+        <Input
+          type="number"
+          suffix="円"
+          placeholder="仮想通貨の利益"
+          value={state.cryptoProfit}
+          onChange={(e) => setState("cryptoProfit", Number(e.target.value))}
+        />
       </Question>
     </div>
   );
 };
 
-const SectionTwo = () => {
+const SectionTwo = ({ state, setState }: SectionProps) => {
   return (
     <div className={styles.sectionContainer}>
       <Question title="配偶者の有無" help="あなたの職業を選択してください。">
-        <YesNo name="001" value={false} onChange={() => {}} />
+        <YesNo
+          name="001"
+          value={state.hasSpouse}
+          onChange={(value) => setState("hasSpouse", value)}
+        />
       </Question>
       <Question
         title="配偶者の給与収入"
         help="あなたの職業を選択してください。"
       >
-        <Input type="number" suffix="円" placeholder="配偶者の給与収入" />
+        <Input
+          type="number"
+          suffix="円"
+          placeholder="配偶者の給与収入"
+          value={state.spouseIncome}
+          onChange={(e) => setState("spouseIncome", Number(e.target.value))}
+        />
       </Question>
       <Question
         title="寡婦に該当しますか？"
         help="あなたの職業を選択してください。"
       >
-        <YesNo name="002" value={false} onChange={() => {}} />
+        <YesNo
+          name="002"
+          value={state.hasWidow}
+          onChange={(value) => setState("hasWidow", value)}
+        />
+      </Question>
+      <Question
+        title="ひとり親に該当しますか？"
+        help="あなたの職業を選択してください。"
+      >
+        <YesNo
+          name="003"
+          value={state.isSingleParent}
+          onChange={(value) => setState("isSingleParent", value)}
+        />
       </Question>
       <Question
         title="ひとり親に該当しますか？"
@@ -114,19 +175,43 @@ const SectionTwo = () => {
         <YesNo name="003" value={false} onChange={() => {}} />
       </Question>
       <Question title="一般の障害者" help="あなたの職業を選択してください。">
-        <Input type="number" suffix="人" placeholder="一般の障害者" />
+        <Input
+          type="number"
+          suffix="人"
+          placeholder="一般の障害者"
+          value={state.generalDisabilityCount}
+          onChange={(e) =>
+            setState("generalDisabilityCount", Number(e.target.value))
+          }
+        />
       </Question>
       <Question
         title="本人・別居の特別障害者"
         help="あなたの職業を選択してください。"
       >
-        <Input type="number" suffix="人" placeholder="本人・別居の特別障害者" />
+        <Input
+          type="number"
+          suffix="人"
+          placeholder="本人・別居の特別障害者"
+          value={state.specialDisabilityCount}
+          onChange={(e) =>
+            setState("specialDisabilityCount", Number(e.target.value))
+          }
+        />
       </Question>
       <Question
         title="同居の特別障害者"
         help="あなたの職業を選択してください。"
       >
-        <Input type="number" suffix="人" placeholder="同居の特別障害者" />
+        <Input
+          type="number"
+          suffix="人"
+          placeholder="同居の特別障害者"
+          value={state.cohabitingSpecialDisabilityCount}
+          onChange={(e) =>
+            setState("cohabitingSpecialDisabilityCount", Number(e.target.value))
+          }
+        />
       </Question>
       <Question
         title="扶養家族の人数: 15歳以下"
@@ -168,47 +253,97 @@ const SectionTwo = () => {
   );
 };
 
-const SectionThree = () => {
+const SectionThree = ({ state, setState }: SectionProps) => {
   return (
     <div className={styles.sectionContainer}>
       <Question
         title="社会保険料の金額"
         help="あなたの職業を選択してください。"
       >
-        <Input type="number" suffix="円" placeholder="0" />
+        <Input
+          type="number"
+          suffix="円"
+          placeholder="0"
+          value={state.socialInsurance}
+          onChange={(e) => setState("socialInsurance", Number(e.target.value))}
+        />
       </Question>
       <Question
         title="生命保険料の金額"
         help="あなたの職業を選択してください。"
       >
-        <Input type="number" suffix="円" placeholder="0" />
+        <Input
+          type="number"
+          suffix="円"
+          placeholder="0"
+          value={state.lifeInsuranceDeduction}
+          onChange={(e) =>
+            setState("lifeInsuranceDeduction", Number(e.target.value))
+          }
+        />
       </Question>
       <Question title="医療費の金額" help="あなたの職業を選択してください。">
-        <Input type="number" suffix="円" placeholder="0" />
+        <Input
+          type="number"
+          suffix="円"
+          placeholder="0"
+          value={state.medicalExpensesDeduction}
+          onChange={(e) =>
+            setState("medicalExpensesDeduction", Number(e.target.value))
+          }
+        />
       </Question>
       <Question
         title="小規模企業共済等掛金の金額"
         help="あなたの職業を選択してください。"
       >
-        <Input type="number" suffix="円" placeholder="0" />
+        <Input
+          type="number"
+          suffix="円"
+          placeholder="0"
+          value={state.premiumPension}
+          onChange={(e) => setState("premiumPension", Number(e.target.value))}
+        />
       </Question>
       <Question
         title="地震保険料の金額"
         help="あなたの職業を選択してください。"
       >
-        <Input type="number" suffix="円" placeholder="0" />
+        <Input
+          type="number"
+          suffix="円"
+          placeholder="0"
+          value={state.earthquakeInsuranceDeduction}
+          onChange={(e) =>
+            setState("earthquakeInsuranceDeduction", Number(e.target.value))
+          }
+        />
       </Question>
       <Question
         title="住宅借入金等特別控除"
         help="あなたの職業を選択してください。"
       >
-        <Input type="number" suffix="円" placeholder="0" />
+        <Input
+          type="number"
+          suffix="円"
+          placeholder="0"
+          value={state.housingLoanDeduction}
+          onChange={(e) =>
+            setState("housingLoanDeduction", Number(e.target.value))
+          }
+        />
       </Question>
       <Question
         title="寄付金控除(ふるさと納税額)"
         help="あなたの職業を選択してください。"
       >
-        <Input type="number" suffix="円" placeholder="0" />
+        <Input
+          type="number"
+          suffix="円"
+          placeholder="0"
+          value={state.donation}
+          onChange={(e) => setState("donation", Number(e.target.value))}
+        />
       </Question>
     </div>
   );
