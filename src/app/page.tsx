@@ -1,10 +1,5 @@
 "use client";
 
-import {
-  SetState,
-  TaxCalculationState,
-  useTaxCalculation
-} from "@/app/use-tax-calculation";
 import { Footer } from "@/components/footer";
 import { Header } from "@/components/header";
 import { Input } from "@/components/input";
@@ -17,7 +12,12 @@ import {
 } from "@/components/ui/accordion";
 import { Card, CardContent } from "@/components/ui/card";
 import { YesNo } from "@/components/yes-no";
-import { DependentCountsByGroup } from "@/lib/tax-calculation";
+import {
+  SetState,
+  TaxCalculationState,
+  useTaxCalculation
+} from "@/lib/hooks/use-tax-calculation";
+import { DependentCountsByGroup } from "@/lib/tax-calculation-helper";
 
 export default function Home() {
   const {

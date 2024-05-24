@@ -3,7 +3,7 @@ import { describe, it, expect } from "@jest/globals";
 import {
   calculateSpouseSpecialDeduction,
   isBetweenSlab
-} from "@/lib/spouse-special-deduction";
+} from "@/lib/tax-calculation-helper";
 
 describe("isBetween function to check between slabs", () => {
   const slab = { min: 100, max: 200 };

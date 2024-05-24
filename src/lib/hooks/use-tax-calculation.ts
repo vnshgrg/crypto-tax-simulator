@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 
-import { calculateSpouseSpecialDeduction } from "@/lib/spouse-special-deduction";
 import {
   calculateSalaryDeduction,
   calculateNetIncome,
@@ -11,10 +10,11 @@ import {
   calculateWidowDeduction,
   calculateSingleParentDeduction,
   calculateDeductionLimitForFurusatoTaxPayment,
-  calculateTaxDetails
-} from "@/lib/tax-calculation";
+  calculateTaxDetails,
+  calculateSpouseSpecialDeduction
+} from "@/lib/tax-calculation-helper";
 
-import type { DependentCountsByGroup } from "@/lib/tax-calculation";
+import type { DependentCountsByGroup } from "@/lib/tax-calculation-helper";
 
 const initialState = {
   salaryIncome: 0,
