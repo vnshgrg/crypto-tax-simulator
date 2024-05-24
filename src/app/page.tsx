@@ -130,18 +130,31 @@ const SectionOne = ({ setState }: SectionProps) => {
           onChange={(e) => setState("salaryIncome", Number(e.target.value))}
         />
       </Question>
-      <Question
-        title="仮想通貨の利益"
-        help="総平均法で計算した実現損益を入力してください。"
-      >
-        <Input
-          type="number"
-          min="0"
-          suffix="円"
-          placeholder="仮想通貨の利益"
-          onChange={(e) => setState("cryptoProfit", Number(e.target.value))}
-        />
-      </Question>
+      <div className="space-y-3">
+        <div>
+          <Question
+            title="仮想通貨の利益"
+            help="あなたの職業を選択してください。"
+          >
+            <Input
+              type="number"
+              min="0"
+              suffix="円"
+              placeholder="仮想通貨の利益"
+              onChange={(e) => setState("cryptoProfit", Number(e.target.value))}
+            />
+          </Question>
+        </div>
+        <div className="w-full text-right text-xs text-slate-500">
+          <a
+            href="https://grid.cryptact.io"
+            className="text-blue-500 hover:text-blue-700 hover:underline"
+          >
+            ログイン
+          </a>
+          するとクリプタクトから 実現損益をインポートできます。
+        </div>
+      </div>
     </div>
   );
 };
