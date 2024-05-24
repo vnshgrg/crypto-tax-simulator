@@ -6,8 +6,8 @@ export const Header = () => (
       <CardTitle className="text-xl font-bold text-slate-700">
         仮想通貨の税金計算シミュレーションツール
       </CardTitle>
-      <CardDescription className="text-base">
-        簡単な質問に答えるだけで、仮想通貨取引の税金を簡単に概算します。さっそく始めましょう！
+      <CardDescription className="whitespace-pre-line text-base">
+        いくつかの質問に答えるだけで、仮想通貨取引の税金を計算します。さっそく始めましょう！
       </CardDescription>
     </div>
     <div className="order-1 flex h-auto w-full items-center justify-center pb-4 text-center md:relative md:order-2 md:w-36 md:shrink-0 md:pb-0 md:text-left">

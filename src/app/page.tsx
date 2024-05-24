@@ -168,12 +168,6 @@ const SectionTwo = ({ state, setState }: SectionProps) => {
           onChange={(value) => setState("isSingleParent", value)}
         />
       </Question>
-      <Question
-        title="ひとり親に該当しますか？"
-        help="あなたの職業を選択してください。"
-      >
-        <YesNo name="003" value={false} onChange={() => {}} />
-      </Question>
       <Question title="一般の障害者" help="あなたの職業を選択してください。">
         <Input
           type="number"
@@ -269,7 +263,7 @@ const SectionThree = ({ state, setState }: SectionProps) => {
         />
       </Question>
       <Question
-        title="生命保険料の金額"
+        title="生命保険料の控除額"
         help="あなたの職業を選択してください。"
       >
         <Input
@@ -282,7 +276,7 @@ const SectionThree = ({ state, setState }: SectionProps) => {
           }
         />
       </Question>
-      <Question title="医療費の金額" help="あなたの職業を選択してください。">
+      <Question title="医療費の控除額" help="あなたの職業を選択してください。">
         <Input
           type="number"
           suffix="円"
@@ -306,7 +300,7 @@ const SectionThree = ({ state, setState }: SectionProps) => {
         />
       </Question>
       <Question
-        title="地震保険料の金額"
+        title="地震保険料の控除額"
         help="あなたの職業を選択してください。"
       >
         <Input
