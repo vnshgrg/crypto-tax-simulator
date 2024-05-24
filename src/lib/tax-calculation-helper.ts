@@ -144,8 +144,13 @@ export function calculateSingleParentDeduction(
   return isSingleParent ? 350_000 : 0;
 }
 
+export type TaxBracket = {
+  upperLimit: number;
+  rate: number;
+};
+
 // 所得税の計算
-const TAX_BRACKETS = [
+export const TAX_BRACKETS = [
   { upperLimit: 1_950_000, rate: 0.05 },
   { upperLimit: 3_300_000, rate: 0.1 },
   { upperLimit: 6_950_000, rate: 0.2 },
@@ -155,9 +160,7 @@ const TAX_BRACKETS = [
   { upperLimit: Infinity, rate: 0.45 }
 ];
 
-export type TaxedBracket = {
-  upperLimit: number;
-  rate: number;
+export type TaxedBracket = TaxBracket & {
   taxedAmount: number;
   taxAmount: number;
 };
@@ -233,11 +236,18 @@ type CalculateTaxDetails = {
   };
 };
 
+export type TaxDetails = {
+  taxableIncome: number;
+  taxBrackets: TaxedBracket[];
+  taxedAmount: number;
+  taxAmount: number;
+};
+
 export const calculateTaxDetails = ({
   state,
   income,
   deductions
-}: CalculateTaxDetails) => {
+}: CalculateTaxDetails): TaxDetails => {
   const taxableIncome = calculateTaxableIncome({ state, deductions, income });
   const taxBrackets = calculateIncomeTax(taxableIncome);
   const [taxedAmount, taxAmount] = taxBrackets.reduce(

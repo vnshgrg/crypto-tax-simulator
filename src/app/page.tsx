@@ -92,6 +92,7 @@ export default function Home() {
         <Footer
           calculatedResult={calculatedResult}
           calculatedTaxResult={calculatedTaxResult}
+          taxDetails={taxDetails}
         />
       </Card>
     </main>
