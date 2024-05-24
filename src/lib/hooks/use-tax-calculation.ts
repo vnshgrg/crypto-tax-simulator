@@ -136,8 +136,6 @@ export const useTaxCalculation = () => {
   // So, we only show deductions if taxedAmount is greater than 0
   const IS_DEDUCTION_APPLICABLE = taxDetails.taxedAmount > 0;
 
-  console.log(basicDeduction);
-
   const result = {
     salaryDeduction: IS_DEDUCTION_APPLICABLE ? salaryDeduction : 0,
     basicDeduction: IS_DEDUCTION_APPLICABLE ? basicDeduction : 0,

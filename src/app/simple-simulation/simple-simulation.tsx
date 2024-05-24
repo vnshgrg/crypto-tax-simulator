@@ -1,6 +1,5 @@
 "use client";
 
-import { SectionProps } from "@/app/page";
 import { Input } from "@/components/input";
 import { Button } from "@/components/ui/button";
 import {
@@ -17,7 +16,15 @@ import {
   SelectValue
 } from "@/components/ui/select";
 
-export const SimpleSimulation = ({ setState }: SectionProps) => {
+export const SimpleSimulation = ({
+  setSalaryIncome,
+  setCryptoProfit,
+  onClick
+}: {
+  setSalaryIncome: React.Dispatch<React.SetStateAction<number>>;
+  setCryptoProfit: React.Dispatch<React.SetStateAction<number>>;
+  onClick: () => void;
+}) => {
   return (
     <Card className="mx-auto w-full max-w-sm rounded-md bg-gray-50 shadow-md">
       <CardHeader className="border-b p-4">
@@ -51,7 +58,7 @@ export const SimpleSimulation = ({ setState }: SectionProps) => {
               min={0}
               type="text"
               className="rounded border p-2"
-              onChange={(e) => setState("salaryIncome", Number(e.target.value))}
+              onChange={(e) => setSalaryIncome(Number(e.target.value))}
             />
             <p>円</p>
           </div>
@@ -67,14 +74,17 @@ export const SimpleSimulation = ({ setState }: SectionProps) => {
               min={0}
               type="text"
               className="rounded border p-2"
-              onChange={(e) => setState("cryptoProfit", Number(e.target.value))}
+              onChange={(e) => setCryptoProfit(Number(e.target.value))}
             />
             <p>円</p>
           </div>
         </div>
       </CardContent>
       <CardFooter className="justify-center">
-        <Button className="w-[200px] rounded-lg bg-blue-400 p-2 hover:bg-blue-700 active:bg-blue-700">
+        <Button
+          className="w-[200px] rounded-lg bg-blue-400 p-2 hover:bg-blue-700 active:bg-blue-700"
+          onClick={onClick}
+        >
           計算する
         </Button>
       </CardFooter>
