@@ -55,6 +55,9 @@ export const TaxSimulationResult = ({
             <span>{numberToJpy(taxableIncome)}</span>
           </div>
         </div>
+        <p className="mb-6 text-xs text-gray-500">
+          ※上記の計算においては、令和５年度の情報、全国健康保険協会の東京都における保険料率を参考にし、40歳以下の場合を想定して概算にて計算しています。
+        </p>
         <div className="mb-6 text-sm text-gray-500">
           上記以外にも家族構成、その他控除等を加味することでより正確な所得税額を求めることができます。
         </div>
