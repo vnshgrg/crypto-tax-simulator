@@ -59,10 +59,10 @@ export default function Home() {
   };
 
   const calculatedTaxResult: Record<string, number> = {
-    税金の概算は: 100000,
-    給与に対する税金は: 50000,
-    仮想通貨の税金は: 50000,
-    ふるさと納税の上限は: 50386
+    税金の概算は: calculatedTax.taxedAmount,
+    給与に対する税金は: calculatedTax.taxAmount
+    // 仮想通貨の税金は: 50000,
+    // ふるさと納税の上限は: 50386
   };
 
   return (
