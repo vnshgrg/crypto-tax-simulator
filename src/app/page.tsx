@@ -38,7 +38,6 @@ export default function Home() {
   const taxAmount = taxDetails.taxAmount;
   const taxAmountWithoutCryptoProfit = taxDetailsWithoutCryptoProfit.taxAmount;
   const cryptoProfitTaxAmount = taxAmount - taxAmountWithoutCryptoProfit;
-  const donationDeductionAmount = taxAmount ? donationDeduction : 0;
 
   const calculatedResult: Record<string, number> = {
     給与所得控除: salaryDeduction,
@@ -51,7 +50,7 @@ export default function Home() {
     "あなたの税金(概算)は": taxAmount,
     給与所得に係る税金は: taxAmountWithoutCryptoProfit,
     仮想通貨所得に係る税金は: cryptoProfitTaxAmount,
-    ふるさと納税の限度額は: donationDeductionAmount
+    ふるさと納税の限度額は: donationDeduction
   };
 
   return (

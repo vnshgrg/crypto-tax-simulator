@@ -156,9 +156,9 @@ export const useTaxCalculation = () => {
   const result = {
     salaryDeduction: IS_DEDUCTION_APPLICABLE ? salaryDeduction : 0,
     basicDeduction: IS_DEDUCTION_APPLICABLE ? basicDeduction : 0,
+    donationDeduction: IS_DEDUCTION_APPLICABLE ? donationDeduction : 0,
     spouseSpecialDeduction,
     dependentDeduction,
-    donationDeduction,
     taxDetails,
     taxDetailsWithoutCryptoProfit
   };
