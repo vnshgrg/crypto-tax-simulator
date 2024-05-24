@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { calculateSpouseSpecialDeduction } from "@/lib/spouse-special-deduction";
 import {
@@ -11,7 +11,7 @@ import {
   calculateWidowDeduction,
   calculateSingleParentDeduction,
   calculateDeductionLimitForFurusatoTaxPayment,
-  calculateIncomeTax
+  calculateTaxDetails
 } from "@/lib/tax-calculation";
 
 import type { DependentCountsByGroup } from "@/lib/tax-calculation";
@@ -56,6 +56,13 @@ export type SetState = (
 export const useTaxCalculation = () => {
   const [state, setState] = useState<TaxCalculationState>(initialState);
 
+  // If no spouse, set spouseIncome to 0
+  useEffect(() => {
+    if (!state.hasSpouse) {
+      updateState("spouseIncome", 0);
+    }
+  }, [state.hasSpouse]);
+
   const updateState: SetState = (key, value) => {
     setState((prev) => ({
       ...prev,
@@ -97,53 +104,29 @@ export const useTaxCalculation = () => {
     state.isSingleParent
   );
 
-  const calculateTaxableIncome = (
-    spouseSpecialDeduction: number,
-    totalIncome: number
-  ) => {
-    const totalDeductions =
-      state.socialInsurance +
-      basicDeduction +
-      spouseSpecialDeduction +
-      dependentDeduction +
-      state.premiumPension +
-      state.lifeInsuranceDeduction +
-      state.earthquakeInsuranceDeduction +
-      state.housingLoanDeduction +
-      state.medicalExpensesDeduction +
-      state.donation +
-      disabilityDeduction +
-      widowDeduction +
-      singleParentDeduction;
-
-    return Math.max(0, totalIncome - totalDeductions);
+  const deductions = {
+    spouseSpecialDeduction,
+    basicDeduction,
+    dependentDeduction,
+    disabilityDeduction,
+    widowDeduction,
+    singleParentDeduction
   };
 
-  const calculateTaxDetails = (
-    spouseSpecialDeduction: number,
-    totalIncome: number
-  ) => {
-    const taxableIncome = calculateTaxableIncome(
-      spouseSpecialDeduction,
-      totalIncome
-    );
-    const taxBrackets = calculateIncomeTax(taxableIncome);
-    const [taxedAmount, taxAmount] = taxBrackets.reduce(
-      ([taxedAmount, taxAmount], bracket) => [
-        taxedAmount + bracket.taxedAmount,
-        taxAmount + bracket.taxAmount
-      ],
-      [0, 0]
-    );
+  const taxDetails = calculateTaxDetails({
+    state,
+    income: totalIncome,
+    deductions
+  });
 
-    return { taxableIncome, taxBrackets, taxedAmount, taxAmount };
-  };
-
-  const taxDetails = calculateTaxDetails(spouseSpecialDeduction, totalIncome);
-  const taxDetailsWithoutCryptoProfit = calculateTaxDetails(
-    spouseSpecialDeductionWithoutCrytoProfit,
-    netIncome
-  );
+  const taxDetailsWithoutCryptoProfit = calculateTaxDetails({
+    state,
+    income: netIncome,
+    deductions: {
+      ...deductions,
+      spouseSpecialDeduction: spouseSpecialDeductionWithoutCrytoProfit
+    }
+  });
 
   const donationDeduction = calculateDeductionLimitForFurusatoTaxPayment(
     taxDetails.taxableIncome - state.donation

@@ -1,3 +1,5 @@
+import { TaxCalculationState } from "@/app/use-tax-calculation";
+
 // 給与所得控除
 export function calculateSalaryDeduction(income: number): number {
   if (income <= 1_625_000) {
@@ -187,3 +189,64 @@ export function calculateIncomeTax(taxableIncome: number): TaxedBracket[] {
 
   return taxedBrackets;
 }
+
+const calculateTaxableIncome = ({
+  state,
+  income,
+  deductions: {
+    spouseSpecialDeduction,
+    basicDeduction,
+    dependentDeduction,
+    disabilityDeduction,
+    widowDeduction,
+    singleParentDeduction
+  }
+}: CalculateTaxDetails) => {
+  const totalDeductions =
+    state.socialInsurance +
+    state.premiumPension +
+    state.lifeInsuranceDeduction +
+    state.earthquakeInsuranceDeduction +
+    state.housingLoanDeduction +
+    state.medicalExpensesDeduction +
+    state.donation +
+    spouseSpecialDeduction +
+    basicDeduction +
+    dependentDeduction +
+    disabilityDeduction +
+    widowDeduction +
+    singleParentDeduction;
+
+  return Math.max(0, income - totalDeductions);
+};
+
+type CalculateTaxDetails = {
+  state: TaxCalculationState;
+  income: number;
+  deductions: {
+    spouseSpecialDeduction: number;
+    basicDeduction: number;
+    dependentDeduction: number;
+    disabilityDeduction: number;
+    widowDeduction: number;
+    singleParentDeduction: number;
+  };
+};
+
+export const calculateTaxDetails = ({
+  state,
+  income,
+  deductions
+}: CalculateTaxDetails) => {
+  const taxableIncome = calculateTaxableIncome({ state, deductions, income });
+  const taxBrackets = calculateIncomeTax(taxableIncome);
+  const [taxedAmount, taxAmount] = taxBrackets.reduce(
+    ([taxedAmount, taxAmount], bracket) => [
+      taxedAmount + bracket.taxedAmount,
+      taxAmount + bracket.taxAmount
+    ],
+    [0, 0]
+  );
+
+  return { taxableIncome, taxBrackets, taxedAmount, taxAmount };
+};
