@@ -17,11 +17,13 @@ import {
 } from "@/components/ui/accordion";
 import { Card, CardContent } from "@/components/ui/card";
 import { YesNo } from "@/components/yes-no";
+import { DependentCountsByGroup } from "@/lib/tax-calculation";
 
 export default function Home() {
   const {
     state,
     updateState,
+    updateDependents,
     result: {
       salaryDeduction,
       basicDeduction,
@@ -33,6 +35,10 @@ export default function Home() {
     }
   } = useTaxCalculation();
 
+  const taxAmount = taxDetails.taxAmount;
+  const taxAmountWithoutCryptoProfit = taxDetailsWithoutCryptoProfit.taxAmount;
+  const cryptoProfitTaxAmount = taxAmount - taxAmountWithoutCryptoProfit;
+
   const calculatedResult: Record<string, number> = {
     給与所得控除: salaryDeduction,
     基礎控除: basicDeduction,
@@ -41,10 +47,9 @@ export default function Home() {
   };
 
   const calculatedTaxResult: Record<string, number> = {
-    "あなたの税金(概算)は": taxDetails.taxAmount,
-    給与所得に係る税金は: taxDetailsWithoutCryptoProfit.taxAmount,
-    仮想通貨所得に係る税金は:
-      taxDetails.taxAmount - taxDetailsWithoutCryptoProfit.taxAmount,
+    "あなたの税金(概算)は": taxAmount,
+    給与所得に係る税金は: taxAmountWithoutCryptoProfit,
+    仮想通貨所得に係る税金は: cryptoProfitTaxAmount,
     ふるさと納税の限度額は: donationDeduction
   };
 
@@ -67,7 +72,11 @@ export default function Home() {
                 <h3>2. 家族について教えてください</h3>
               </AccordionTrigger>
               <AccordionContent className={styles.accordionSection}>
-                <SectionTwo state={state} setState={updateState} />
+                <SectionTwo
+                  state={state}
+                  setState={updateState}
+                  setDependents={updateDependents}
+                />
               </AccordionContent>
             </AccordionItem>
             <AccordionItem value="item-3" className="border-none">
@@ -101,12 +110,17 @@ type SectionProps = {
   setState: SetState;
 };
 
+type SetDependents = {
+  setDependents: (key: keyof DependentCountsByGroup, value: number) => void;
+};
+
 const SectionOne = ({ state, setState }: SectionProps) => {
   return (
     <div className={styles.sectionContainer}>
       <Question title="給与収入" help="あなたの職業を選択してください。">
         <Input
           type="number"
+          min="0"
           suffix="円"
           placeholder="給与収入"
           value={state.salaryIncome || undefined}
@@ -116,6 +130,7 @@ const SectionOne = ({ state, setState }: SectionProps) => {
       <Question title="仮想通貨の利益" help="あなたの職業を選択してください。">
         <Input
           type="number"
+          min="0"
           suffix="円"
           placeholder="仮想通貨の利益"
           value={state.cryptoProfit || undefined}
@@ -126,7 +141,11 @@ const SectionOne = ({ state, setState }: SectionProps) => {
   );
 };
 
-const SectionTwo = ({ state, setState }: SectionProps) => {
+const SectionTwo = ({
+  state,
+  setState,
+  setDependents
+}: SectionProps & SetDependents) => {
   return (
     <div className={styles.sectionContainer}>
       <Question title="配偶者の有無" help="あなたの職業を選択してください。">
@@ -142,6 +161,7 @@ const SectionTwo = ({ state, setState }: SectionProps) => {
       >
         <Input
           type="number"
+          min="0"
           suffix="円"
           placeholder="配偶者の給与収入"
           value={state.spouseIncome || undefined}
@@ -171,6 +191,7 @@ const SectionTwo = ({ state, setState }: SectionProps) => {
       <Question title="一般の障害者" help="あなたの職業を選択してください。">
         <Input
           type="number"
+          min="0"
           suffix="人"
           placeholder="一般の障害者"
           value={state.generalDisabilityCount || undefined}
@@ -185,6 +206,7 @@ const SectionTwo = ({ state, setState }: SectionProps) => {
       >
         <Input
           type="number"
+          min="0"
           suffix="人"
           placeholder="本人・別居の特別障害者"
           value={state.specialDisabilityCount || undefined}
@@ -199,6 +221,7 @@ const SectionTwo = ({ state, setState }: SectionProps) => {
       >
         <Input
           type="number"
+          min="0"
           suffix="人"
           placeholder="同居の特別障害者"
           value={state.cohabitingSpecialDisabilityCount || undefined}
@@ -211,37 +234,81 @@ const SectionTwo = ({ state, setState }: SectionProps) => {
         title="扶養家族の人数: 15歳以下"
         help="あなたの職業を選択してください。"
       >
-        <Input type="number" suffix="人" placeholder="0" />
+        <Input
+          type="number"
+          min="0"
+          suffix="人"
+          placeholder="0"
+          value={state.dependents.under15 || undefined}
+          onChange={(e) => setDependents("under15", Number(e.target.value))}
+        />
       </Question>
       <Question
         title="扶養家族の人数: 16-18歳"
         help="あなたの職業を選択してください。"
       >
-        <Input type="number" suffix="人" placeholder="0" />
+        <Input
+          type="number"
+          min="0"
+          suffix="人"
+          placeholder="0"
+          value={state.dependents.from16to18 || undefined}
+          onChange={(e) => setDependents("from16to18", Number(e.target.value))}
+        />
       </Question>
       <Question
         title="扶養家族の人数: 19-22歳"
         help="あなたの職業を選択してください。"
       >
-        <Input type="number" suffix="人" placeholder="0" />
+        <Input
+          type="number"
+          min="0"
+          suffix="人"
+          placeholder="0"
+          value={state.dependents.from19to22 || undefined}
+          onChange={(e) => setDependents("from19to22", Number(e.target.value))}
+        />
       </Question>
       <Question
         title="扶養家族の人数: 23-69歳"
         help="あなたの職業を選択してください。"
       >
-        <Input type="number" suffix="人" placeholder="0" />
+        <Input
+          type="number"
+          min="0"
+          suffix="人"
+          placeholder="0"
+          value={state.dependents.from23to69 || undefined}
+          onChange={(e) => setDependents("from23to69", Number(e.target.value))}
+        />
       </Question>
       <Question
         title="扶養家族の人数: 70歳+(同居の親・祖父母)"
         help="あなたの職業を選択してください。"
       >
-        <Input type="number" suffix="人" placeholder="0" />
+        <Input
+          type="number"
+          min="0"
+          suffix="人"
+          placeholder="0"
+          value={state.dependents.over70Coresiding || undefined}
+          onChange={(e) =>
+            setDependents("over70Coresiding", Number(e.target.value))
+          }
+        />
       </Question>
       <Question
         title="扶養家族の人数: 70歳+(上記以外)"
         help="あなたの職業を選択してください。"
       >
-        <Input type="number" suffix="人" placeholder="0" />
+        <Input
+          type="number"
+          min="0"
+          suffix="人"
+          placeholder="0"
+          value={state.dependents.over70Other || undefined}
+          onChange={(e) => setDependents("over70Other", Number(e.target.value))}
+        />
       </Question>
     </div>
   );
@@ -256,6 +323,7 @@ const SectionThree = ({ state, setState }: SectionProps) => {
       >
         <Input
           type="number"
+          min="0"
           suffix="円"
           placeholder="0"
           value={state.socialInsurance || undefined}
@@ -268,6 +336,7 @@ const SectionThree = ({ state, setState }: SectionProps) => {
       >
         <Input
           type="number"
+          min="0"
           suffix="円"
           placeholder="0"
           value={state.lifeInsuranceDeduction || undefined}
@@ -279,6 +348,7 @@ const SectionThree = ({ state, setState }: SectionProps) => {
       <Question title="医療費の控除額" help="あなたの職業を選択してください。">
         <Input
           type="number"
+          min="0"
           suffix="円"
           placeholder="0"
           value={state.medicalExpensesDeduction || undefined}
@@ -293,6 +363,7 @@ const SectionThree = ({ state, setState }: SectionProps) => {
       >
         <Input
           type="number"
+          min="0"
           suffix="円"
           placeholder="0"
           value={state.premiumPension || undefined}
@@ -305,6 +376,7 @@ const SectionThree = ({ state, setState }: SectionProps) => {
       >
         <Input
           type="number"
+          min="0"
           suffix="円"
           placeholder="0"
           value={state.earthquakeInsuranceDeduction || undefined}
@@ -319,6 +391,7 @@ const SectionThree = ({ state, setState }: SectionProps) => {
       >
         <Input
           type="number"
+          min="0"
           suffix="円"
           placeholder="0"
           value={state.housingLoanDeduction || undefined}
@@ -333,6 +406,7 @@ const SectionThree = ({ state, setState }: SectionProps) => {
       >
         <Input
           type="number"
+          min="0"
           suffix="円"
           placeholder="0"
           value={state.donation || undefined}
