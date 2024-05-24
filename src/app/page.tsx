@@ -105,12 +105,12 @@ const styles: Record<string, string> = {
   sectionContainer: "space-y-5 md:space-y-4"
 };
 
-type SectionProps = {
+export type SectionProps = {
   state: TaxCalculationState;
   setState: SetState;
 };
 
-type SetDependents = {
+export type SetDependents = {
   setDependents: (key: keyof DependentCountsByGroup, value: number) => void;
 };
 

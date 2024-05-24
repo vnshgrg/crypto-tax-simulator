@@ -1,6 +1,5 @@
 import React from "react";
 
-import { Input } from "@/components/input";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -9,60 +8,48 @@ import {
   CardHeader
 } from "@/components/ui/card";
 
-export const TaxSimulationResult = () => {
+export const TaxSimulationResult = ({
+  taxAmount,
+  totalIncome,
+  basicDeduction,
+  salaryDeduction,
+  taxableIncome
+}: {
+  taxAmount: number;
+  totalIncome: number;
+  basicDeduction: number;
+  salaryDeduction: number;
+  taxableIncome: number;
+}) => {
   return (
-    <Card className="mx-auto w-full max-w-md rounded-md border border-gray-300 p-6 shadow-md">
+    <Card className="mx-auto mt-10 w-full max-w-md rounded-md border border-gray-300 p-6 shadow-md">
       <CardHeader className="mb-4 text-center">
         <h2 className="text-lg font-bold">税金かんたんシュミレーション</h2>
       </CardHeader>
       <CardContent>
         <div className="mb-6 text-center">
           <p className="text-lg">あなたの所得税額は</p>
-          <p className="text-3xl font-bold text-blue-600">50,0000 円</p>
+          <p className="text-3xl font-bold text-blue-600">{taxAmount}</p>
         </div>
         <div className="mb-6 rounded border border-gray-300 p-4">
           <div className="mb-2 flex justify-between">
             <span>総収入</span>
-            <span>
-              <Input
-                type="text"
-                placeholder="円"
-                className="w-24 rounded border border-gray-300 p-1 text-right"
-              />
-            </span>
+            <span>{totalIncome}</span>
           </div>
           <div className="mb-4 text-sm text-gray-500">
             仮想通貨取引による雑所得は給与等の所得と合算され税率、税額が決まります。
           </div>
           <div className="mb-2 flex justify-between">
             <span>基礎控除</span>
-            <span>
-              <Input
-                type="text"
-                placeholder="円"
-                className="w-24 rounded border border-gray-300 p-1 text-right"
-              />
-            </span>
+            <span>{basicDeduction}</span>
           </div>
           <div className="mb-2 flex justify-between">
             <span>給与所得控除</span>
-            <span>
-              <Input
-                type="text"
-                placeholder="円"
-                className="w-24 rounded border border-gray-300 p-1 text-right"
-              />
-            </span>
+            <span>{salaryDeduction}</span>
           </div>
           <div className="flex justify-between">
             <span>課税所得額</span>
-            <span>
-              <Input
-                type="text"
-                placeholder="円"
-                className="w-24 rounded border border-gray-300 p-1 text-right"
-              />
-            </span>
+            <span>{taxableIncome}</span>
           </div>
         </div>
         <div className="mb-6 text-sm text-gray-500">

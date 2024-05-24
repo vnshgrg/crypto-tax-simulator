@@ -1,5 +1,6 @@
 "use client";
 
+import { SectionProps } from "@/app/page";
 import { Input } from "@/components/input";
 import { Button } from "@/components/ui/button";
 import {
@@ -16,7 +17,7 @@ import {
   SelectValue
 } from "@/components/ui/select";
 
-export const SimpleSimulation = () => {
+export const SimpleSimulation = ({ setState }: SectionProps) => {
   return (
     <Card className="mx-auto w-full max-w-sm rounded-md bg-gray-50 shadow-md">
       <CardHeader className="border-b p-4">
@@ -50,6 +51,7 @@ export const SimpleSimulation = () => {
               min={0}
               type="text"
               className="rounded border p-2"
+              onChange={(e) => setState("salaryIncome", Number(e.target.value))}
             />
             <p>円</p>
           </div>
@@ -65,6 +67,7 @@ export const SimpleSimulation = () => {
               min={0}
               type="text"
               className="rounded border p-2"
+              onChange={(e) => setState("cryptoProfit", Number(e.target.value))}
             />
             <p>円</p>
           </div>
