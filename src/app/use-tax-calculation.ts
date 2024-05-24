@@ -27,14 +27,6 @@ const initialState = {
   generalDisabilityCount: 0,
   specialDisabilityCount: 0,
   cohabitingSpecialDisabilityCount: 0,
-  dependents: {
-    under15: 0,
-    from16to18: 0,
-    from19to22: 0,
-    from23to69: 0,
-    over70Coresiding: 0,
-    over70Other: 0
-  },
 
   socialInsurance: 0,
   lifeInsuranceDeduction: 0,
@@ -42,7 +34,15 @@ const initialState = {
   premiumPension: 0,
   earthquakeInsuranceDeduction: 0,
   housingLoanDeduction: 0,
-  donation: 0
+  donation: 0,
+  dependents: {
+    under15: 0,
+    from16to18: 0,
+    from19to22: 0,
+    from23to69: 0,
+    over70Coresiding: 0,
+    over70Other: 0
+  }
 };
 
 export type TaxCalculationState = Omit<typeof initialState, "dependents"> & {
@@ -51,7 +51,7 @@ export type TaxCalculationState = Omit<typeof initialState, "dependents"> & {
 
 export type SetState = (
   key: keyof TaxCalculationState,
-  value: number | boolean
+  value: number | boolean | DependentCountsByGroup
 ) => void;
 
 export const useTaxCalculation = () => {
@@ -61,6 +61,19 @@ export const useTaxCalculation = () => {
     setState((prev) => ({
       ...prev,
       [key]: value
+    }));
+  };
+
+  const updateDependents = (
+    key: keyof DependentCountsByGroup,
+    value: number
+  ) => {
+    setState((prev) => ({
+      ...prev,
+      dependents: {
+        ...prev.dependents,
+        [key]: value
+      }
     }));
   };
 
@@ -137,9 +150,13 @@ export const useTaxCalculation = () => {
     taxDetails.taxableIncome - state.donation
   );
 
+  // Deduction is applicable only when salary income is provided
+  // So, we only show deductions if taxedAmount is greater than 0
+  const IS_DEDUCTION_APPLICABLE = taxDetails.taxedAmount > 0;
+
   const result = {
-    salaryDeduction,
-    basicDeduction,
+    salaryDeduction: IS_DEDUCTION_APPLICABLE ? salaryDeduction : 0,
+    basicDeduction: IS_DEDUCTION_APPLICABLE ? basicDeduction : 0,
     spouseSpecialDeduction,
     dependentDeduction,
     donationDeduction,
@@ -150,6 +167,7 @@ export const useTaxCalculation = () => {
   return {
     state,
     updateState,
+    updateDependents,
     result
   };
 };
