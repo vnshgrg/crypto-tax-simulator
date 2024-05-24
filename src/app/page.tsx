@@ -134,7 +134,7 @@ const SectionOne = ({ setState }: SectionProps) => {
         <div>
           <Question
             title="仮想通貨の利益"
-            help="あなたの職業を選択してください。"
+            help="総平均法で計算した実現損益を入力してください。"
           >
             <Input
               type="number"
