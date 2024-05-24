@@ -85,9 +85,31 @@ export function calculateDependentDeduction(
   return totalDeduction;
 }
 
-// TODO: 寄附金控除(ふるさと納税)
-export function calculateDonationDeduction(donation: number): number {
-  return donation;
+// 寄附金控除(ふるさと納税)
+export function calculateDeductionLimitForFurusatoTaxPayment(
+  taxableIncomeWithoutFurusatoDonation: number
+): number {
+  const marginalIncomeTaxRate = calculateMarginalIncomeTaxRate(
+    taxableIncomeWithoutFurusatoDonation
+  );
+
+  const deductionLimitForFurusatoTaxPayment =
+    (taxableIncomeWithoutFurusatoDonation * 0.1 * 0.2) /
+      (0.9 - marginalIncomeTaxRate * 1.021) +
+    2000;
+
+  // Fractions less than one thousand yen are rounded down
+  return Math.floor(deductionLimitForFurusatoTaxPayment / 4 / 1000) * 1000 * 4;
+}
+
+// 所得税の限界税率
+function calculateMarginalIncomeTaxRate(taxableIncome: number): number {
+  for (const bracket of TAX_BRACKETS) {
+    if (taxableIncome <= bracket.upperLimit) {
+      return bracket.rate;
+    }
+  }
+  return 0;
 }
 
 // 障害者控除
