@@ -27,14 +27,6 @@ const initialState = {
   generalDisabilityCount: 0,
   specialDisabilityCount: 0,
   cohabitingSpecialDisabilityCount: 0,
-
-  socialInsurance: 0,
-  lifeInsuranceDeduction: 0,
-  medicalExpensesDeduction: 0,
-  premiumPension: 0,
-  earthquakeInsuranceDeduction: 0,
-  housingLoanDeduction: 0,
-  donation: 0,
   dependents: {
     under15: 0,
     from16to18: 0,
@@ -42,7 +34,14 @@ const initialState = {
     from23to69: 0,
     over70Coresiding: 0,
     over70Other: 0
-  }
+  },
+  socialInsurance: 0,
+  lifeInsuranceDeduction: 0,
+  medicalExpensesDeduction: 0,
+  premiumPension: 0,
+  earthquakeInsuranceDeduction: 0,
+  housingLoanDeduction: 0,
+  donation: 0
 };
 
 export type TaxCalculationState = Omit<typeof initialState, "dependents"> & {
