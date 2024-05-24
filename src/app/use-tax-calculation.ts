@@ -27,7 +27,14 @@ const initialState = {
   generalDisabilityCount: 0,
   specialDisabilityCount: 0,
   cohabitingSpecialDisabilityCount: 0,
-  dependents: {},
+  dependents: {
+    under15: 0,
+    from16to18: 0,
+    from19to22: 0,
+    from23to69: 0,
+    over70Coresiding: 0,
+    over70Other: 0
+  },
 
   socialInsurance: 0,
   lifeInsuranceDeduction: 0,
@@ -38,7 +45,9 @@ const initialState = {
   donation: 0
 };
 
-export type TaxCalculationState = Omit<typeof initialState, "dependents">;
+export type TaxCalculationState = Omit<typeof initialState, "dependents"> & {
+  dependents: DependentCountsByGroup;
+};
 
 export type SetState = (
   key: keyof TaxCalculationState,

@@ -55,7 +55,6 @@ const SPECIFIC_DEDUCTION = 630_000;
 const ELDERLY_DEDUCTION_CORESIDING = 580_000;
 const ELDERLY_DEDUCTION_NON_CORESIDING = 480_000;
 
-
 export type DependentCountsByGroup = {
   under15: number;
   from16to18: number;
@@ -100,7 +99,7 @@ export function calculateDeductionLimitForFurusatoTaxPayment(
     2000;
 
   // Fractions less than one thousand yen are rounded down
-  return Math.floor(deductionLimitForFurusatoTaxPayment / 4 / 1000) * 1000 * 4;
+  return Math.floor(deductionLimitForFurusatoTaxPayment / 1000) * 1000;
 }
 
 // 所得税の限界税率

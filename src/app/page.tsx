@@ -41,11 +41,11 @@ export default function Home() {
   };
 
   const calculatedTaxResult: Record<string, number> = {
-    税金の概算は: taxDetails.taxAmount,
-    給与に対する税金は: taxDetailsWithoutCryptoProfit.taxAmount,
-    仮想通貨の税金は:
+    "あなたの税金(概算)は": taxDetails.taxAmount,
+    給与所得に係る税金は: taxDetailsWithoutCryptoProfit.taxAmount,
+    仮想通貨所得に係る税金は:
       taxDetails.taxAmount - taxDetailsWithoutCryptoProfit.taxAmount,
-    ふるさと納税の上限は: donationDeduction
+    ふるさと納税の限度額は: donationDeduction
   };
 
   return (
@@ -238,7 +238,7 @@ const SectionTwo = ({ state, setState }: SectionProps) => {
         <Input type="number" suffix="人" placeholder="0" />
       </Question>
       <Question
-        title="扶養家族の人数: 70歳+(同居の親等)"
+        title="扶養家族の人数: 70歳+(同居の親・祖父母)"
         help="あなたの職業を選択してください。"
       >
         <Input type="number" suffix="人" placeholder="0" />
