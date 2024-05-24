@@ -27,8 +27,9 @@ export default function Home() {
       basicDeduction,
       spouseSpecialDeduction,
       dependentDeduction,
-      taxedAmount,
-      taxAmount
+      donationDeduction,
+      taxDetails,
+      taxDetailsWithoutCryptoProfit
     }
   } = useTaxCalculation();
 
@@ -40,10 +41,11 @@ export default function Home() {
   };
 
   const calculatedTaxResult: Record<string, number> = {
-    税金の概算は: taxedAmount,
-    給与に対する税金は: taxAmount
-    // 仮想通貨の税金は: 50000,
-    // ふるさと納税の上限は: 50386
+    税金の概算は: taxDetails.taxAmount,
+    給与に対する税金は: taxDetailsWithoutCryptoProfit.taxAmount,
+    仮想通貨の税金は:
+      taxDetails.taxAmount - taxDetailsWithoutCryptoProfit.taxAmount,
+    ふるさと納税の上限は: donationDeduction
   };
 
   return (

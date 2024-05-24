@@ -10,11 +10,11 @@ import {
   calculateDisabilityDeduction,
   calculateWidowDeduction,
   calculateSingleParentDeduction,
-  calculateDonationDeduction,
+  calculateDeductionLimitForFurusatoTaxPayment,
   calculateIncomeTax
 } from "@/lib/tax-calculation";
 
-import type { Dependent } from "@/lib/tax-calculation";
+import type { DependentCountsByGroup } from "@/lib/tax-calculation";
 
 const initialState = {
   salaryIncome: 0,
@@ -27,7 +27,7 @@ const initialState = {
   generalDisabilityCount: 0,
   specialDisabilityCount: 0,
   cohabitingSpecialDisabilityCount: 0,
-  dependents: [],
+  dependents: {},
 
   socialInsurance: 0,
   lifeInsuranceDeduction: 0,
@@ -38,9 +38,7 @@ const initialState = {
   donation: 0
 };
 
-export type TaxCalculationState = Omit<typeof initialState, "dependents"> & {
-  dependents: Dependent[];
-};
+export type TaxCalculationState = Omit<typeof initialState, "dependents">;
 
 export type SetState = (
   key: keyof TaxCalculationState,
@@ -65,6 +63,8 @@ export const useTaxCalculation = () => {
     totalIncome,
     state.spouseIncome
   );
+  const spouseSpecialDeductionWithoutCrytoProfit =
+    calculateSpouseSpecialDeduction(netIncome, state.spouseIncome);
   const dependentDeduction = calculateDependentDeduction(state.dependents);
   const disabilityDeduction = calculateDisabilityDeduction(
     state.generalDisabilityCount,
@@ -75,21 +75,22 @@ export const useTaxCalculation = () => {
   const singleParentDeduction = calculateSingleParentDeduction(
     state.isSingleParent
   );
-  const donationDeduction = calculateDonationDeduction(state.donation);
 
-  const calculateTaxableIncome = () => {
+  const calculateTaxableIncome = (
+    spouseSpecialDeduction: number,
+    totalIncome: number
+  ) => {
     const totalDeductions =
       state.socialInsurance +
       basicDeduction +
       spouseSpecialDeduction +
       dependentDeduction +
-      // socialInsuranceDeduction +
       state.premiumPension +
       state.lifeInsuranceDeduction +
       state.earthquakeInsuranceDeduction +
       state.housingLoanDeduction +
       state.medicalExpensesDeduction +
-      donationDeduction +
+      state.donation +
       disabilityDeduction +
       widowDeduction +
       singleParentDeduction;
@@ -97,14 +98,34 @@ export const useTaxCalculation = () => {
     return Math.max(0, totalIncome - totalDeductions);
   };
 
-  const taxableIncome = calculateTaxableIncome();
-  const taxBrackets = calculateIncomeTax(taxableIncome);
-  const [taxedAmount, taxAmount] = taxBrackets.reduce(
-    ([taxedAmount, taxAmount], bracket) => [
-      taxedAmount + bracket.taxedAmount,
-      taxAmount + bracket.taxAmount
-    ],
-    [0, 0]
+  const calculateTaxDetails = (
+    spouseSpecialDeduction: number,
+    totalIncome: number
+  ) => {
+    const taxableIncome = calculateTaxableIncome(
+      spouseSpecialDeduction,
+      totalIncome
+    );
+    const taxBrackets = calculateIncomeTax(taxableIncome);
+    const [taxedAmount, taxAmount] = taxBrackets.reduce(
+      ([taxedAmount, taxAmount], bracket) => [
+        taxedAmount + bracket.taxedAmount,
+        taxAmount + bracket.taxAmount
+      ],
+      [0, 0]
+    );
+
+    return { taxableIncome, taxBrackets, taxedAmount, taxAmount };
+  };
+
+  const taxDetails = calculateTaxDetails(spouseSpecialDeduction, totalIncome);
+  const taxDetailsWithoutCryptoProfit = calculateTaxDetails(
+    spouseSpecialDeductionWithoutCrytoProfit,
+    netIncome
+  );
+
+  const donationDeduction = calculateDeductionLimitForFurusatoTaxPayment(
+    taxDetails.taxableIncome - state.donation
   );
 
   const result = {
@@ -112,9 +133,9 @@ export const useTaxCalculation = () => {
     basicDeduction,
     spouseSpecialDeduction,
     dependentDeduction,
-    taxBrackets,
-    taxedAmount,
-    taxAmount
+    donationDeduction,
+    taxDetails,
+    taxDetailsWithoutCryptoProfit
   };
 
   return {
