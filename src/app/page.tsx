@@ -117,7 +117,10 @@ type SetDependents = {
 const SectionOne = ({ setState }: SectionProps) => {
   return (
     <div className={styles.sectionContainer}>
-      <Question title="給与収入" help="あなたの職業を選択してください。">
+      <Question
+        title="給与収入"
+        help="源泉徴収票の「支払金額」を記入してください。"
+      >
         <Input
           type="number"
           min="0"
@@ -126,7 +129,10 @@ const SectionOne = ({ setState }: SectionProps) => {
           onChange={(e) => setState("salaryIncome", Number(e.target.value))}
         />
       </Question>
-      <Question title="仮想通貨の利益" help="あなたの職業を選択してください。">
+      <Question
+        title="仮想通貨の利益"
+        help="総平均法で計算した実現損益を入力してください。"
+      >
         <Input
           type="number"
           min="0"
@@ -146,7 +152,7 @@ const SectionTwo = ({
 }: SectionProps & SetDependents) => {
   return (
     <div className={styles.sectionContainer}>
-      <Question title="配偶者の有無" help="あなたの職業を選択してください。">
+      <Question title="配偶者の有無" help="配偶者の有無を選択してください。">
         <YesNo
           name="001"
           value={state.hasSpouse}
@@ -156,7 +162,7 @@ const SectionTwo = ({
       {state.hasSpouse && (
         <Question
           title="配偶者の給与収入"
-          help="あなたの職業を選択してください。"
+          help="配偶者の給与収入に基づき、配偶者控除の判定をします。配偶者の給与収入がない方は「0」と記載するか空欄のままにしてください。"
         >
           <Input
             type="number"
@@ -169,7 +175,7 @@ const SectionTwo = ({
       )}
       <Question
         title="寡婦に該当しますか？"
-        help="あなたの職業を選択してください。"
+        help="寡婦控除の対象となる人の範囲はこちらで確認ください。"
       >
         <YesNo
           name="002"
@@ -179,7 +185,7 @@ const SectionTwo = ({
       </Question>
       <Question
         title="ひとり親に該当しますか？"
-        help="あなたの職業を選択してください。"
+        help="ひとり親控除の対象となる人の範囲はこちらで確認ください。"
       >
         <YesNo
           name="003"
@@ -187,7 +193,7 @@ const SectionTwo = ({
           onChange={(value) => setState("isSingleParent", value)}
         />
       </Question>
-      <Question title="一般の障害者" help="あなたの職業を選択してください。">
+      <Question title="一般の障害者">
         <Input
           type="number"
           min="0"
@@ -198,10 +204,7 @@ const SectionTwo = ({
           }
         />
       </Question>
-      <Question
-        title="本人・別居の特別障害者"
-        help="あなたの職業を選択してください。"
-      >
+      <Question title="本人・別居の特別障害者">
         <Input
           type="number"
           min="0"
@@ -212,10 +215,7 @@ const SectionTwo = ({
           }
         />
       </Question>
-      <Question
-        title="同居の特別障害者"
-        help="あなたの職業を選択してください。"
-      >
+      <Question title="同居の特別障害者">
         <Input
           type="number"
           min="0"
@@ -226,10 +226,7 @@ const SectionTwo = ({
           }
         />
       </Question>
-      <Question
-        title="扶養家族の人数: 15歳以下"
-        help="あなたの職業を選択してください。"
-      >
+      <Question title="扶養家族の人数: 15歳以下">
         <Input
           type="number"
           min="0"
@@ -238,10 +235,7 @@ const SectionTwo = ({
           onChange={(e) => setDependents("under15", Number(e.target.value))}
         />
       </Question>
-      <Question
-        title="扶養家族の人数: 16-18歳"
-        help="あなたの職業を選択してください。"
-      >
+      <Question title="扶養家族の人数: 16-18歳">
         <Input
           type="number"
           min="0"
@@ -250,10 +244,7 @@ const SectionTwo = ({
           onChange={(e) => setDependents("from16to18", Number(e.target.value))}
         />
       </Question>
-      <Question
-        title="扶養家族の人数: 19-22歳"
-        help="あなたの職業を選択してください。"
-      >
+      <Question title="扶養家族の人数: 19-22歳">
         <Input
           type="number"
           min="0"
@@ -262,10 +253,7 @@ const SectionTwo = ({
           onChange={(e) => setDependents("from19to22", Number(e.target.value))}
         />
       </Question>
-      <Question
-        title="扶養家族の人数: 23-69歳"
-        help="あなたの職業を選択してください。"
-      >
+      <Question title="扶養家族の人数: 23-69歳">
         <Input
           type="number"
           min="0"
@@ -274,10 +262,7 @@ const SectionTwo = ({
           onChange={(e) => setDependents("from23to69", Number(e.target.value))}
         />
       </Question>
-      <Question
-        title="扶養家族の人数: 70歳+(同居の親・祖父母)"
-        help="あなたの職業を選択してください。"
-      >
+      <Question title="扶養家族の人数: 70歳+(同居の親・祖父母)">
         <Input
           type="number"
           min="0"
@@ -288,10 +273,7 @@ const SectionTwo = ({
           }
         />
       </Question>
-      <Question
-        title="扶養家族の人数: 70歳+(上記以外)"
-        help="あなたの職業を選択してください。"
-      >
+      <Question title="扶養家族の人数: 70歳+(上記以外)">
         <Input
           type="number"
           min="0"
@@ -307,10 +289,7 @@ const SectionTwo = ({
 const SectionThree = ({ setState }: SectionProps) => {
   return (
     <div className={styles.sectionContainer}>
-      <Question
-        title="社会保険料の金額"
-        help="あなたの職業を選択してください。"
-      >
+      <Question title="社会保険料の金額">
         <Input
           type="number"
           min="0"
@@ -319,10 +298,7 @@ const SectionThree = ({ setState }: SectionProps) => {
           onChange={(e) => setState("socialInsurance", Number(e.target.value))}
         />
       </Question>
-      <Question
-        title="生命保険料の控除額"
-        help="あなたの職業を選択してください。"
-      >
+      <Question title="生命保険料の控除額">
         <Input
           type="number"
           min="0"
@@ -333,7 +309,7 @@ const SectionThree = ({ setState }: SectionProps) => {
           }
         />
       </Question>
-      <Question title="医療費の控除額" help="あなたの職業を選択してください。">
+      <Question title="医療費の控除額">
         <Input
           type="number"
           min="0"
@@ -344,10 +320,7 @@ const SectionThree = ({ setState }: SectionProps) => {
           }
         />
       </Question>
-      <Question
-        title="小規模企業共済等掛金の金額"
-        help="あなたの職業を選択してください。"
-      >
+      <Question title="小規模企業共済等掛金の金額">
         <Input
           type="number"
           min="0"
@@ -356,10 +329,7 @@ const SectionThree = ({ setState }: SectionProps) => {
           onChange={(e) => setState("premiumPension", Number(e.target.value))}
         />
       </Question>
-      <Question
-        title="地震保険料の控除額"
-        help="あなたの職業を選択してください。"
-      >
+      <Question title="地震保険料の控除額">
         <Input
           type="number"
           min="0"
@@ -370,10 +340,7 @@ const SectionThree = ({ setState }: SectionProps) => {
           }
         />
       </Question>
-      <Question
-        title="住宅借入金等特別控除"
-        help="あなたの職業を選択してください。"
-      >
+      <Question title="住宅借入金等特別控除">
         <Input
           type="number"
           min="0"
@@ -384,10 +351,7 @@ const SectionThree = ({ setState }: SectionProps) => {
           }
         />
       </Question>
-      <Question
-        title="寄付金控除(ふるさと納税額)"
-        help="あなたの職業を選択してください。"
-      >
+      <Question title="寄付金控除(ふるさと納税額)">
         <Input
           type="number"
           min="0"
