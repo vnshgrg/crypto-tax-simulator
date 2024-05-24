@@ -1,7 +1,5 @@
 "use client";
 
-import { useState, useEffect } from "react";
-
 import {
   SetState,
   TaxCalculationState,
@@ -24,32 +22,15 @@ export default function Home() {
   const {
     state,
     updateState,
-    salaryDeduction,
-    basicDeduction,
-    spouseSpecialDeduction,
-    dependentDeduction,
-    taxBrackets
-  } = useTaxCalculation();
-
-  const [calculatedTax, setCalculatedTax] = useState({
-    taxedAmount: 0,
-    taxAmount: 0
-  });
-
-  useEffect(() => {
-    let taxedAmount = 0;
-    let taxAmount = 0;
-
-    for (const bracket of taxBrackets) {
-      taxedAmount += bracket.taxedAmount;
-      taxAmount += bracket.taxAmount;
-    }
-
-    setCalculatedTax({
+    result: {
+      salaryDeduction,
+      basicDeduction,
+      spouseSpecialDeduction,
+      dependentDeduction,
       taxedAmount,
       taxAmount
-    });
-  }, [taxBrackets]);
+    }
+  } = useTaxCalculation();
 
   const calculatedResult: Record<string, number> = {
     給与所得控除: salaryDeduction,
@@ -59,8 +40,8 @@ export default function Home() {
   };
 
   const calculatedTaxResult: Record<string, number> = {
-    税金の概算は: calculatedTax.taxedAmount,
-    給与に対する税金は: calculatedTax.taxAmount
+    税金の概算は: taxedAmount,
+    給与に対する税金は: taxAmount
     // 仮想通貨の税金は: 50000,
     // ふるさと納税の上限は: 50386
   };

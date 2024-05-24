@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 import { calculateSpouseSpecialDeduction } from "@/lib/spouse-special-deduction";
 import {
@@ -14,7 +14,7 @@ import {
   calculateIncomeTax
 } from "@/lib/tax-calculation";
 
-import type { Dependent, TaxedBracket } from "@/lib/tax-calculation";
+import type { Dependent } from "@/lib/tax-calculation";
 
 const initialState = {
   salaryIncome: 0,
@@ -28,6 +28,7 @@ const initialState = {
   specialDisabilityCount: 0,
   cohabitingSpecialDisabilityCount: 0,
   dependents: [],
+
   socialInsurance: 0,
   lifeInsuranceDeduction: 0,
   medicalExpensesDeduction: 0,
@@ -56,110 +57,69 @@ export const useTaxCalculation = () => {
     }));
   };
 
-  // results during the process
-  const [salaryDeduction, setSalaryDeduction] = useState(0);
-  const [netIncome, setNetIncome] = useState(0);
-  const [basicDeduction, setBasicDeduction] = useState(0);
-  const [spouseSpecialDeduction, setSpouseSpecialDeduction] = useState(0);
-  const [dependentDeduction, setDependentDeduction] = useState(0);
-
-  useEffect(() => {
-    setSalaryDeduction(calculateSalaryDeduction(state.salaryIncome));
-  }, [state.salaryIncome]);
-
-  useEffect(() => {
-    setNetIncome(calculateNetIncome(state.salaryIncome));
-  }, [state.salaryIncome]);
-
-  useEffect(() => {
-    setBasicDeduction(calculateBasicDeduction(netIncome));
-  }, [netIncome]);
-
-  useEffect(() => {
-    const totalIncome = calculateTotalIncome(netIncome, state.cryptoProfit);
-    setBasicDeduction(calculateBasicDeduction(totalIncome));
-    setSpouseSpecialDeduction(
-      calculateSpouseSpecialDeduction(totalIncome, state.spouseIncome)
-    );
-  }, [netIncome, state.cryptoProfit, state.spouseIncome]);
-
-  useEffect(() => {
-    setDependentDeduction(calculateDependentDeduction(state.dependents));
-  }, [state.dependents]);
-
-  // calculation
-
-  const [taxBrackets, setTaxBrackets] = useState<TaxedBracket[]>([]);
-
-  useEffect(() => {
-    const calculateTaxableIncome = () => {
-      const netIncome = calculateNetIncome(state.salaryIncome);
-      const totalIncome = calculateTotalIncome(netIncome, state.cryptoProfit);
-
-      const basicDeduction = calculateBasicDeduction(totalIncome);
-      const dependentDeduction = calculateDependentDeduction(state.dependents);
-      const spouseSpecialDeduction = calculateSpouseSpecialDeduction(
-        totalIncome,
-        state.spouseIncome
-      );
-      const disabilityDeduction = calculateDisabilityDeduction(
-        state.generalDisabilityCount,
-        state.specialDisabilityCount,
-        state.cohabitingSpecialDisabilityCount
-      );
-      const widowDeduction = calculateWidowDeduction(state.hasWidow);
-      const singleParentDeduction = calculateSingleParentDeduction(
-        state.isSingleParent
-      );
-      const donationDeduction = calculateDonationDeduction(state.donation);
-
-      const totalDeductions =
-        state.socialInsurance +
-        basicDeduction +
-        spouseSpecialDeduction +
-        dependentDeduction +
-        // socialInsuranceDeduction +
-        // premiumPension +
-        state.lifeInsuranceDeduction +
-        state.earthquakeInsuranceDeduction +
-        state.housingLoanDeduction +
-        state.medicalExpensesDeduction +
-        donationDeduction +
-        disabilityDeduction +
-        widowDeduction +
-        singleParentDeduction;
-
-      return Math.max(0, totalIncome - totalDeductions);
-    };
-
-    const taxableIncome = calculateTaxableIncome();
-    const taxBrackets = calculateIncomeTax(taxableIncome);
-    setTaxBrackets(taxBrackets);
-  }, [
-    state.cohabitingSpecialDisabilityCount,
-    state.cryptoProfit,
-    state.dependents,
-    state.donation,
-    state.earthquakeInsuranceDeduction,
+  const salaryDeduction = calculateSalaryDeduction(state.salaryIncome);
+  const netIncome = calculateNetIncome(state.salaryIncome);
+  const totalIncome = calculateTotalIncome(netIncome, state.cryptoProfit);
+  const basicDeduction = calculateBasicDeduction(netIncome);
+  const spouseSpecialDeduction = calculateSpouseSpecialDeduction(
+    totalIncome,
+    state.spouseIncome
+  );
+  const dependentDeduction = calculateDependentDeduction(state.dependents);
+  const disabilityDeduction = calculateDisabilityDeduction(
     state.generalDisabilityCount,
-    state.hasWidow,
-    state.housingLoanDeduction,
-    state.isSingleParent,
-    state.lifeInsuranceDeduction,
-    state.salaryIncome,
-    state.socialInsurance,
     state.specialDisabilityCount,
-    state.spouseIncome,
-    state.medicalExpensesDeduction
-  ]);
+    state.cohabitingSpecialDisabilityCount
+  );
+  const widowDeduction = calculateWidowDeduction(state.hasWidow);
+  const singleParentDeduction = calculateSingleParentDeduction(
+    state.isSingleParent
+  );
+  const donationDeduction = calculateDonationDeduction(state.donation);
 
-  return {
-    state,
-    updateState,
+  const calculateTaxableIncome = () => {
+    const totalDeductions =
+      state.socialInsurance +
+      basicDeduction +
+      spouseSpecialDeduction +
+      dependentDeduction +
+      // socialInsuranceDeduction +
+      state.premiumPension +
+      state.lifeInsuranceDeduction +
+      state.earthquakeInsuranceDeduction +
+      state.housingLoanDeduction +
+      state.medicalExpensesDeduction +
+      donationDeduction +
+      disabilityDeduction +
+      widowDeduction +
+      singleParentDeduction;
+
+    return Math.max(0, totalIncome - totalDeductions);
+  };
+
+  const taxableIncome = calculateTaxableIncome();
+  const taxBrackets = calculateIncomeTax(taxableIncome);
+  const [taxedAmount, taxAmount] = taxBrackets.reduce(
+    ([taxedAmount, taxAmount], bracket) => [
+      taxedAmount + bracket.taxedAmount,
+      taxAmount + bracket.taxAmount
+    ],
+    [0, 0]
+  );
+
+  const result = {
     salaryDeduction,
     basicDeduction,
     spouseSpecialDeduction,
     dependentDeduction,
-    taxBrackets
+    taxBrackets,
+    taxedAmount,
+    taxAmount
+  };
+
+  return {
+    state,
+    updateState,
+    result
   };
 };
